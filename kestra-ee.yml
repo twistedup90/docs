@@ -1,0 +1,3877 @@
+openapi: 3.0.1
+info:
+  title: Kestra EE
+tags:
+- name: Flows
+  description: Flows api
+- name: Templates
+  description: Templates api
+- name: Executions
+  description: Executions api
+- name: Logs
+  description: Logs api
+- name: Namespaces
+  description: Namespaces api
+- name: Users
+  description: Users api
+- name: Groups
+  description: Groups api
+- name: Bindings
+  description: Bindings api
+- name: Roles
+  description: Roles api
+- name: Audit Logs
+  description: Audit Logs api
+- name: Auths
+  description: Auth api
+- name: Stats
+  description: Stats api
+- name: Misc
+  description: Misc api
+paths:
+  /api/v1/acls/actions:
+    get:
+      tags:
+      - Misc
+      summary: Get list of actions
+      operationId: actions
+      parameters: []
+      responses:
+        "200":
+          description: actions 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Action'
+  /api/v1/acls/permissions:
+    get:
+      tags:
+      - Misc
+      summary: Get list of permissions
+      operationId: permissions
+      parameters: []
+      responses:
+        "200":
+          description: permissions 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission'
+  /api/v1/auditlogs/find:
+    post:
+      tags:
+      - Audit Logs
+      summary: Find audit logs
+      operationId: find
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                permission:
+                  $ref: '#/components/schemas/Permission'
+                type:
+                  $ref: '#/components/schemas/CrudEventType'
+                detail:
+                  type: object
+                  additionalProperties: true
+                  description: the detail filters
+        required: true
+      responses:
+        "200":
+          description: find 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLogController.AuditLogWithUser'
+  /api/v1/auditlogs/search:
+    get:
+      tags:
+      - Audit Logs
+      summary: Search for audit logs
+      operationId: search
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: search 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_AuditLogController.AuditLogWithUser_'
+  /api/v1/auths:
+    get:
+      tags:
+      - Auths
+      summary: Get list of authentification methods
+      operationId: index
+      parameters: []
+      responses:
+        "200":
+          description: index 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthController.Auth'
+  /api/v1/bindings:
+    post:
+      tags:
+      - Bindings
+      summary: Create a binding
+      operationId: create
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Binding'
+        required: true
+      responses:
+        "200":
+          description: create 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BindingController.BindingDetail'
+  /api/v1/bindings/search:
+    get:
+      tags:
+      - Bindings
+      summary: Search for bindings
+      operationId: find_1
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: type
+        in: query
+        description: Binding type filter
+        required: false
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/Binding.Type'
+          - nullable: true
+      - name: id
+        in: query
+        description: External id filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: find_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_BindingController.BindingDetail_'
+  /api/v1/bindings/{id}:
+    get:
+      tags:
+      - Bindings
+      summary: Get a binding
+      operationId: index_1
+      parameters:
+      - name: id
+        in: path
+        description: The binding id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BindingController.BindingDetail'
+    delete:
+      tags:
+      - Bindings
+      summary: Delete a binding
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        description: The binding id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/executions:
+    get:
+      tags:
+      - Executions
+      summary: Search for executions for a flow
+      operationId: findByFlowId
+      parameters:
+      - name: namespace
+        in: query
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: flowId
+        in: query
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: findByFlowId 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Execution_'
+  /api/v1/executions/search:
+    get:
+      tags:
+      - Executions
+      summary: Search for executions
+      operationId: find_2
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: state
+        in: query
+        description: A state filter
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
+      responses:
+        "200":
+          description: find_2 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Execution_'
+  /api/v1/executions/trigger/{namespace}/{id}:
+    post:
+      tags:
+      - Executions
+      summary: Trigger a new execution for a flow
+      operationId: trigger
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                inputs:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  nullable: true
+                files:
+                  type: array
+                  nullable: true
+                  items:
+                    type: string
+                    format: binary
+        required: true
+      responses:
+        "409":
+          description: if the flow is disabled
+  /api/v1/executions/webhook/{namespace}/{id}/{key}:
+    get:
+      tags:
+      - Executions
+      summary: Trigger a new execution by GET webhook trigger
+      operationId: webhookTriggerGet
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: The webhook trigger uid
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: webhookTriggerGet 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+    put:
+      tags:
+      - Executions
+      summary: Trigger a new execution by PUT webhook trigger
+      operationId: webhookTriggerPut
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: The webhook trigger uid
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: webhookTriggerPut 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+    post:
+      tags:
+      - Executions
+      summary: Trigger a new execution by POST webhook trigger
+      operationId: webhookTriggerPost
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: The webhook trigger uid
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: webhookTriggerPost 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+  /api/v1/executions/{executionId}:
+    get:
+      tags:
+      - Executions
+      summary: Get an execution
+      operationId: get
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: get 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+  /api/v1/executions/{executionId}/file:
+    get:
+      tags:
+      - Executions
+      summary: Download file for an execution
+      operationId: file
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: path
+        in: query
+        description: The internal storage uri
+        required: true
+        schema:
+          type: string
+          format: uri
+      responses:
+        "200":
+          description: file 200 response
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /api/v1/executions/{executionId}/file/metas:
+    get:
+      tags:
+      - Executions
+      summary: Get file meta information for an execution
+      operationId: filesize
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: path
+        in: query
+        description: The internal storage uri
+        required: true
+        schema:
+          type: string
+          format: uri
+      responses:
+        "200":
+          description: filesize 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FileMetas'
+  /api/v1/executions/{executionId}/follow:
+    get:
+      tags:
+      - Executions
+      summary: Follow an execution
+      operationId: follow
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: follow 200 response
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/Event_Execution_'
+  /api/v1/executions/{executionId}/graph:
+    get:
+      tags:
+      - Executions
+      summary: Generate a graph for an execution
+      operationId: flowGraph
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: flowGraph 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FlowGraph'
+  /api/v1/executions/{executionId}/kill:
+    delete:
+      tags:
+      - Executions
+      summary: Kill an execution
+      operationId: kill
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+        "409":
+          description: if the executions is already finished
+  /api/v1/executions/{executionId}/replay:
+    post:
+      tags:
+      - Executions
+      summary: Create a new execution from an old one and start it from a specified
+        task run id
+      operationId: replay
+      parameters:
+      - name: executionId
+        in: path
+        description: the original execution id to clone
+        required: true
+        schema:
+          type: string
+      - name: taskRunId
+        in: query
+        description: The taskrun id
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: revision
+        in: query
+        description: The flow revision to use for new execution
+        required: false
+        schema:
+          type: integer
+          format: int32
+          nullable: true
+      responses:
+        "200":
+          description: replay 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+  /api/v1/executions/{executionId}/restart:
+    post:
+      tags:
+      - Executions
+      summary: Restart a new execution from an old one
+      operationId: restart
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: revision
+        in: query
+        description: The flow revision to use for new execution
+        required: false
+        schema:
+          type: integer
+          format: int32
+          nullable: true
+      responses:
+        "200":
+          description: restart 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+  /api/v1/executions/{executionId}/state:
+    post:
+      tags:
+      - Executions
+      summary: Change state for a taskrun in an execution
+      operationId: changeState
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecutionController.StateRequest'
+        required: true
+      responses:
+        "200":
+          description: changeState 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+  /api/v1/flows:
+    post:
+      tags:
+      - Flows
+      summary: Create a flow
+      operationId: create_1
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flow'
+        required: true
+      responses:
+        "200":
+          description: create_1 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Flow'
+  /api/v1/flows/distinct-namespaces:
+    get:
+      tags:
+      - Flows
+      summary: List all distinct namespaces
+      operationId: listDistinctNamespace
+      parameters: []
+      responses:
+        "200":
+          description: listDistinctNamespace 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/v1/flows/search:
+    get:
+      tags:
+      - Flows
+      summary: Search for flows
+      operationId: find_3
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: find_3 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Flow_'
+  /api/v1/flows/source:
+    get:
+      tags:
+      - Flows
+      summary: Search for flows source code
+      operationId: source
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: source 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_SearchResult_Flow__'
+  /api/v1/flows/{namespace}:
+    post:
+      tags:
+      - Flows
+      summary: Update a complete namespace
+      description: |-
+        All flow will be created / updated for this namespace.
+        Flow that already created but not in `flows` will be deleted
+      operationId: updateNamespace
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Flow'
+        required: true
+      responses:
+        "200":
+          description: updateNamespace 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flow'
+  /api/v1/flows/{namespace}/{id}:
+    get:
+      tags:
+      - Flows
+      summary: Get a flow
+      operationId: index_2
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_2 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Flow'
+    put:
+      tags:
+      - Flows
+      summary: Update a flow
+      operationId: update
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flow'
+        required: true
+      responses:
+        "200":
+          description: update 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Flow'
+    delete:
+      tags:
+      - Flows
+      summary: Delete a flow
+      operationId: delete_1
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/flows/{namespace}/{id}/dependencies:
+    get:
+      tags:
+      - Flows
+      summary: Get flow dependencies
+      operationId: dependencies
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: destinationOnly
+        in: query
+        description: "if true, list only destination dependencies, otherwise list\
+          \ also source dependencies"
+        required: true
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: dependencies 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FlowTopologyGraph'
+  /api/v1/flows/{namespace}/{id}/graph:
+    get:
+      tags:
+      - Flows
+      summary: Generate a graph for a flow
+      operationId: flowGraph_1
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: revision
+        in: query
+        description: The flow revision
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: flowGraph_1 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/FlowGraph'
+  /api/v1/flows/{namespace}/{id}/revisions:
+    get:
+      tags:
+      - Flows
+      summary: Get revisions for a flow
+      operationId: revisions
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: revisions 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flow'
+  /api/v1/flows/{namespace}/{id}/{taskId}:
+    patch:
+      tags:
+      - Flows
+      summary: Update a single task on a flow
+      operationId: updateTask
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: taskId
+        in: path
+        description: The task id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      responses:
+        "200":
+          description: updateTask 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Flow'
+  /api/v1/groups:
+    post:
+      tags:
+      - Groups
+      summary: Create a group
+      operationId: create_2
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+        required: true
+      responses:
+        "200":
+          description: create_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  /api/v1/groups/autocomplete:
+    post:
+      tags:
+      - Groups
+      summary: List groups for autocomplete
+      operationId: autocomplete
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: Lucene string filter
+                ids:
+                  type: array
+                  description: The ids that must be present on results
+                  nullable: true
+                  items:
+                    type: string
+        required: true
+      responses:
+        "200":
+          description: autocomplete 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+  /api/v1/groups/ids:
+    post:
+      tags:
+      - Groups
+      summary: List groups by ids
+      operationId: ids
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: The ids that must be present on results
+                  items:
+                    type: string
+        required: true
+      responses:
+        "200":
+          description: ids 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+  /api/v1/groups/search:
+    get:
+      tags:
+      - Groups
+      summary: Search for groups
+      operationId: find_4
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: find_4 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Group_'
+  /api/v1/groups/{id}:
+    get:
+      tags:
+      - Groups
+      summary: Get a group
+      operationId: index_3
+      parameters:
+      - name: id
+        in: path
+        description: The group id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_3 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    put:
+      tags:
+      - Groups
+      summary: Update a group
+      operationId: update_1
+      parameters:
+      - name: id
+        in: path
+        description: The group id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+        required: true
+      responses:
+        "200":
+          description: update_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    delete:
+      tags:
+      - Groups
+      summary: Delete a group
+      operationId: delete_2
+      parameters:
+      - name: id
+        in: path
+        description: The group id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/groups/{id}/members:
+    get:
+      tags:
+      - Groups
+      summary: Search for users in a group
+      operationId: members
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: members 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_User_'
+  /api/v1/groups/{id}/members/{userId}:
+    put:
+      tags:
+      - Groups
+      summary: Add a group for a user
+      operationId: addGroup
+      parameters:
+      - name: id
+        in: path
+        description: The group id
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: addGroup 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+    delete:
+      tags:
+      - Groups
+      summary: Delete a group for a user
+      operationId: deleteGroup
+      parameters:
+      - name: id
+        in: path
+        description: The group id
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: deleteGroup 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+  /api/v1/logs/search:
+    get:
+      tags:
+      - Logs
+      summary: Search for logs
+      operationId: find_5
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: minLevel
+        in: query
+        description: The min log level filter
+        required: false
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/Level'
+          - nullable: true
+      responses:
+        "200":
+          description: find_5 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_LogEntry_'
+  /api/v1/logs/{executionId}:
+    get:
+      tags:
+      - Logs
+      summary: Get logs for a specific execution
+      operationId: findByExecution
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: minLevel
+        in: query
+        description: The min log level filter
+        required: false
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/Level'
+          - nullable: true
+      - name: taskRunId
+        in: query
+        description: The taskrun id
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: taskId
+        in: query
+        description: The task id
+        required: false
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: findByExecution 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogEntry'
+  /api/v1/logs/{executionId}/follow:
+    get:
+      tags:
+      - Logs
+      summary: Follow log for a specific execution
+      operationId: follow_1
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: minLevel
+        in: query
+        description: The min log level filter
+        required: false
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/Level'
+          - nullable: true
+      responses:
+        "200":
+          description: follow_1 200 response
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/Event_LogEntry_'
+  /api/v1/me:
+    get:
+      tags:
+      - Auths
+      summary: Get current user
+      operationId: index_4
+      parameters: []
+      responses:
+        "200":
+          description: index_4 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentUserController.Me'
+  /api/v1/namespaces:
+    post:
+      tags:
+      - Namespaces
+      summary: Create a namespace
+      operationId: create_3
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Namespace'
+        required: true
+      responses:
+        "200":
+          description: create_3 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+  /api/v1/namespaces/autocomplete:
+    post:
+      tags:
+      - Namespaces
+      summary: List namespaces for autocomplete
+      operationId: autocomplete_1
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: Lucene string filter
+                ids:
+                  type: array
+                  description: The namespace ids that must be present on results
+                  nullable: true
+                  items:
+                    type: string
+        required: true
+      responses:
+        "200":
+          description: autocomplete_1 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Namespace'
+  /api/v1/namespaces/search:
+    get:
+      tags:
+      - Namespaces
+      summary: Search for namespaces
+      operationId: find_6
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: find_6 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Namespace_'
+  /api/v1/namespaces/{id}:
+    get:
+      tags:
+      - Namespaces
+      summary: Get a namespace
+      operationId: index_5
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_5 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+    put:
+      tags:
+      - Namespaces
+      summary: Update a namespace
+      operationId: update_2
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Namespace'
+        required: true
+      responses:
+        "200":
+          description: update_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Namespace'
+    delete:
+      tags:
+      - Namespaces
+      summary: Delete a flow
+      operationId: delete_3
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/namespaces/{id}/inherited-secrets:
+    get:
+      tags:
+      - Namespaces
+      summary: List inherited secrets
+      operationId: inheritedSecrets
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: inheritedSecrets 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: array
+                  items:
+                    type: string
+  /api/v1/namespaces/{id}/inherited-taskdefaults:
+    get:
+      tags:
+      - Namespaces
+      summary: List inherited task defaults
+      operationId: inheritedTaskDefaults
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: inheritedTaskDefaults 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskDefault'
+  /api/v1/namespaces/{id}/inherited-variables:
+    get:
+      tags:
+      - Namespaces
+      summary: List inherited variables
+      operationId: inheritedVariables
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: inheritedVariables 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/v1/namespaces/{id}/secrets:
+    get:
+      tags:
+      - Namespaces
+      summary: Get secrets for a namespace
+      operationId: listSecret
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: listSecret 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    put:
+      tags:
+      - Namespaces
+      summary: Update secrets for a namespace
+      operationId: putSecrets
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: putSecrets 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/v1/namespaces/{id}/secrets/{key}:
+    delete:
+      tags:
+      - Namespaces
+      summary: Delete a secret for a namespace
+      operationId: deleteSecret
+      parameters:
+      - name: id
+        in: path
+        description: The namespace id
+        required: true
+        schema:
+          type: string
+      - name: key
+        in: path
+        description: The secret key
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: deleteSecret 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/v1/plugins:
+    get:
+      tags:
+      - Plugins
+      summary: Get list of plugins
+      operationId: search_1
+      parameters: []
+      responses:
+        "200":
+          description: search_1 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PluginController.Plugin'
+  /api/v1/plugins/icons:
+    get:
+      tags:
+      - Plugins
+      summary: Get plugins icons
+      operationId: icons
+      parameters: []
+      responses:
+        "200":
+          description: icons 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/PluginController.PluginIcon'
+  /api/v1/plugins/schemas/{type}:
+    get:
+      tags:
+      - Plugins
+      summary: Get all json schemas for a type
+      description: "The schema will be output as [http://json-schema.org/draft-07/schema](Json\
+        \ Schema Draft 7)"
+      operationId: schemas
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/PluginController.SchemaType'
+      responses:
+        "200":
+          description: schemas 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+  /api/v1/plugins/{cls}:
+    get:
+      tags:
+      - Plugins
+      summary: Get plugin documentation
+      operationId: pluginDocumentation
+      parameters:
+      - name: cls
+        in: path
+        description: The plugin full class name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: pluginDocumentation 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PluginController.Doc'
+  /api/v1/roles:
+    post:
+      tags:
+      - Roles
+      summary: Create a role
+      operationId: create_4
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        "200":
+          description: create_4 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+  /api/v1/roles/autocomplete:
+    post:
+      tags:
+      - Roles
+      summary: List roles for autocomplete
+      operationId: autocomplete_2
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: Lucene string filter
+                ids:
+                  type: array
+                  description: The ids that must be present on results
+                  items:
+                    type: string
+        required: true
+      responses:
+        "200":
+          description: autocomplete_2 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+  /api/v1/roles/ids:
+    post:
+      tags:
+      - Roles
+      description: List roles by ids
+      operationId: ids_1
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  description: The ids that must be present on results
+                  items:
+                    type: string
+        required: true
+      responses:
+        "200":
+          description: ids_1 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+  /api/v1/roles/search:
+    get:
+      tags:
+      - Roles
+      summary: Search for roles
+      operationId: find_7
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: find_7 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Role_'
+  /api/v1/roles/{id}:
+    get:
+      tags:
+      - Roles
+      summary: Get a role
+      operationId: index_6
+      parameters:
+      - name: id
+        in: path
+        description: The role id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_6 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    put:
+      tags:
+      - Roles
+      summary: Update a role
+      operationId: update_3
+      parameters:
+      - name: id
+        in: path
+        description: The role id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        "200":
+          description: update_3 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+    delete:
+      tags:
+      - Roles
+      summary: Delete a role
+      operationId: delete_4
+      parameters:
+      - name: id
+        in: path
+        description: The role id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/stats/executions/daily:
+    post:
+      tags:
+      - Stats
+      summary: Get daily statistics for executions
+      operationId: dailyStatistics
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  description: "The start datetime, default to now - 30 days"
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: "The end datetime, default to now"
+                  format: date-time
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: dailyStatistics 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyExecutionStatistics'
+  /api/v1/stats/executions/daily/group-by-flow:
+    post:
+      tags:
+      - Stats
+      summary: Get daily statistics for executions group by namespaces and flows
+      operationId: dailyGroupByFlowStatistics
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  description: "The start datetime, default to now - 30 days"
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: "The end datetime, default to now"
+                  format: date-time
+                  nullable: true
+                namespaceOnly:
+                  type: boolean
+                  description: Return only namespace result and skip flows
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: dailyGroupByFlowStatistics 200 response
+          content:
+            text/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  additionalProperties:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DailyExecutionStatistics'
+  /api/v1/stats/taskruns/daily:
+    post:
+      tags:
+      - Stats
+      summary: Get daily statistics for taskRuns
+      operationId: taskRunsDailyStatistics
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startDate:
+                  type: string
+                  description: "The start datetime, default to now - 30 days"
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: "The end datetime, default to now"
+                  format: date-time
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: taskRunsDailyStatistics 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DailyExecutionStatistics'
+  /api/v1/taskruns/search:
+    get:
+      tags:
+      - Executions
+      summary: Search for taskruns
+      operationId: findTaskRun
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: findTaskRun 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_TaskRun_'
+  /api/v1/templates:
+    post:
+      tags:
+      - Template
+      summary: Create a template
+      operationId: create_5
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template'
+        required: true
+      responses:
+        "200":
+          description: create_5 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+  /api/v1/templates/distinct-namespaces:
+    get:
+      tags:
+      - Template
+      summary: List all distinct namespaces
+      operationId: listDistinctNamespace_1
+      parameters: []
+      responses:
+        "200":
+          description: listDistinctNamespace_1 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  /api/v1/templates/search:
+    get:
+      tags:
+      - Template
+      summary: Search for templates
+      operationId: find_8
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: find_8 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_Template_'
+  /api/v1/templates/{namespace}/{id}:
+    get:
+      tags:
+      - Template
+      summary: Get a template
+      operationId: index_7
+      parameters:
+      - name: namespace
+        in: path
+        description: The template namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The template id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_7 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+    put:
+      tags:
+      - Template
+      summary: Update a template
+      operationId: update_4
+      parameters:
+      - name: namespace
+        in: path
+        description: The template namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The template id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Template'
+        required: true
+      responses:
+        "200":
+          description: update_4 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+    delete:
+      tags:
+      - Template
+      summary: Delete a template
+      operationId: delete_5
+      parameters:
+      - name: namespace
+        in: path
+        description: The template namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The template id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/users:
+    post:
+      tags:
+      - Users
+      summary: Create a user
+      operationId: create_6
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserController.ApiUser'
+        required: true
+      responses:
+        "200":
+          description: create_6 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+  /api/v1/users/autocomplete:
+    post:
+      tags:
+      - Users
+      summary: List users for autocomplete
+      operationId: autocomplete_3
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                  description: Lucene string filter
+                  nullable: true
+                ids:
+                  type: array
+                  description: The ids that must be present on results
+                  nullable: true
+                  items:
+                    type: string
+                username:
+                  type: string
+                  description: An Username filter
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: autocomplete_3 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserController.ApiUser'
+  /api/v1/users/search:
+    get:
+      tags:
+      - Users
+      summary: Search for users
+      operationId: find_9
+      parameters:
+      - name: q
+        in: query
+        description: Lucene string filter
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      responses:
+        "200":
+          description: find_9 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_UserController.ApiUser_'
+  /api/v1/users/{id}:
+    get:
+      tags:
+      - Users
+      summary: Get a user
+      operationId: index_8
+      parameters:
+      - name: id
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: index_8 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+    put:
+      tags:
+      - Users
+      summary: Update a user
+      operationId: update_5
+      parameters:
+      - name: id
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserController.ApiUser'
+        required: true
+      responses:
+        "200":
+          description: update_5 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+    delete:
+      tags:
+      - Users
+      summary: Delete a user
+      operationId: delete_6
+      parameters:
+      - name: id
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
+  /api/v1/users/{id}/auths/{uid}:
+    delete:
+      tags:
+      - Users
+      summary: Delete an Auth for a user
+      operationId: deleteAuth
+      parameters:
+      - name: id
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      - name: uid
+        in: path
+        description: The auth id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: deleteAuth 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+  /api/v1/users/{id}/password:
+    put:
+      tags:
+      - Users
+      summary: Create a basic auth password for a user
+      operationId: index_9
+      parameters:
+      - name: id
+        in: path
+        description: The user id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  description: The password
+        required: true
+      responses:
+        "200":
+          description: index_9 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserController.ApiUser'
+  /api/v1/version:
+    get:
+      tags:
+      - Misc
+      summary: Get current version
+      operationId: version
+      parameters: []
+      responses:
+        "200":
+          description: version 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiscController.Version'
+components:
+  schemas:
+    AbstractAuth:
+      required:
+      - type
+      type: object
+      properties:
+        uid:
+          type: string
+        name:
+          type: string
+        type:
+          pattern: "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.\\\
+            p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*"
+          type: string
+    AbstractGraphTask:
+      type: object
+      properties:
+        uid:
+          type: string
+        type:
+          type: string
+        task:
+          $ref: '#/components/schemas/Task'
+        taskRun:
+          $ref: '#/components/schemas/TaskRun'
+        values:
+          type: array
+          items:
+            type: string
+        relationType:
+          $ref: '#/components/schemas/RelationType'
+    AbstractMetricEntry_Object_:
+      required:
+      - name
+      type: object
+      properties:
+        type:
+          type: string
+        value:
+          $ref: '#/components/schemas/Object'
+        name:
+          type: string
+        tags:
+          type: object
+          additionalProperties:
+            type: string
+    AbstractRetry:
+      type: object
+      properties:
+        type:
+          type: string
+        maxDuration:
+          $ref: '#/components/schemas/Duration'
+        maxAttempt:
+          minimum: 1
+          type: integer
+          format: int32
+        warningOnRetry:
+          type: boolean
+    AbstractTrigger:
+      required:
+      - disabled
+      type: object
+      properties:
+        id:
+          title: A unique id for the whole flow
+          minLength: 1
+          pattern: "[a-zA-Z0-9_-]+"
+          type: string
+        type:
+          title: The class name for this current trigger
+          minLength: 1
+          pattern: "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.\\\
+            p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*"
+          type: string
+        description:
+          type: string
+        conditions:
+          title: List of Conditions in order to limit the flow trigger.
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        disabled:
+          type: boolean
+    AbstractUser:
+      required:
+      - username
+      type: object
+      properties:
+        id:
+          type: string
+        namespaceId:
+          type: string
+        username:
+          type: string
+        description:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        groups:
+          type: array
+          items:
+            type: string
+    AclService.NamespaceRole:
+      required:
+      - namespaceId
+      - role
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/Role'
+        namespaceId:
+          type: string
+    Action:
+      type: string
+      enum:
+      - READ
+      - CREATE
+      - UPDATE
+      - DELETE
+    AuditLog:
+      required:
+      - date
+      - deleted
+      - detail
+      - id
+      - type
+      - userId
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/CrudEventType'
+        detail:
+          $ref: '#/components/schemas/AuditLogDetail'
+        date:
+          type: string
+          format: date-time
+        userId:
+          type: string
+        deleted:
+          type: boolean
+    AuditLogController.AuditLogWithUser:
+      required:
+      - auditLog
+      - user
+      type: object
+      properties:
+        auditLog:
+          $ref: '#/components/schemas/AuditLog'
+        user:
+          $ref: '#/components/schemas/UserController.ApiUser'
+    AuditLogDetail:
+      required:
+      - cls
+      - permission
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+        cls:
+          type: string
+        permission:
+          $ref: '#/components/schemas/Permission'
+    AuthController.Auth:
+      type: object
+      properties:
+        loginPassword:
+          type: boolean
+        oauths:
+          type: array
+          items:
+            type: string
+    Binding:
+      required:
+      - deleted
+      - externalId
+      - id
+      - namespaceId
+      - roleId
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/Binding.Type'
+        externalId:
+          type: string
+        roleId:
+          type: string
+        namespaceId:
+          type: string
+        deleted:
+          type: boolean
+    Binding.Type:
+      type: string
+      enum:
+      - USER
+      - GROUP
+    BindingController.BindingDetail:
+      required:
+      - binding
+      - group
+      - role
+      - user
+      type: object
+      properties:
+        binding:
+          $ref: '#/components/schemas/Binding'
+        role:
+          $ref: '#/components/schemas/Role'
+        user:
+          $ref: '#/components/schemas/UserController.ApiUser'
+        group:
+          $ref: '#/components/schemas/Group'
+    Condition:
+      required:
+      - type
+      type: object
+      properties:
+        type:
+          pattern: "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.\\\
+            p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*"
+          type: string
+    CrudEventType:
+      type: string
+      enum:
+      - READ
+      - CREATE
+      - UPDATE
+      - DELETE
+      - LOGIN
+      - LOGOUT
+    CurrentUserController.Me:
+      required:
+      - roles
+      - user
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/AclService.NamespaceRole'
+    DailyExecutionStatistics:
+      required:
+      - duration
+      - executionCounts
+      - startDate
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date
+        duration:
+          $ref: '#/components/schemas/DailyExecutionStatistics.Duration'
+        executionCounts:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+    DailyExecutionStatistics.Duration:
+      required:
+      - avg
+      - count
+      - max
+      - min
+      - sum
+      type: object
+      properties:
+        min:
+          $ref: '#/components/schemas/Duration'
+        avg:
+          $ref: '#/components/schemas/Duration'
+        max:
+          $ref: '#/components/schemas/Duration'
+        sum:
+          $ref: '#/components/schemas/Duration'
+        count:
+          type: integer
+          format: int64
+    Duration:
+      type: object
+      properties:
+        units:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemporalUnit'
+        zero:
+          type: boolean
+        negative:
+          type: boolean
+        seconds:
+          type: integer
+          format: int64
+        nano:
+          type: integer
+          format: int32
+    Event_Execution_:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Execution'
+        id:
+          type: string
+        name:
+          type: string
+        comment:
+          type: string
+        retry:
+          $ref: '#/components/schemas/Duration'
+    Event_LogEntry_:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/LogEntry'
+        id:
+          type: string
+        name:
+          type: string
+        comment:
+          type: string
+        retry:
+          $ref: '#/components/schemas/Duration'
+    Execution:
+      required:
+      - deleted
+      - flowId
+      - flowRevision
+      - id
+      - inputs
+      - namespace
+      - parentId
+      - state
+      - taskRunList
+      - trigger
+      - variables
+      type: object
+      properties:
+        id:
+          type: string
+        namespace:
+          type: string
+        flowId:
+          type: string
+        flowRevision:
+          type: integer
+          format: int32
+        taskRunList:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskRun'
+        inputs:
+          type: object
+          additionalProperties: true
+        variables:
+          type: object
+          additionalProperties: true
+        state:
+          $ref: '#/components/schemas/State'
+        parentId:
+          type: string
+        trigger:
+          $ref: '#/components/schemas/ExecutionTrigger'
+        deleted:
+          type: boolean
+    ExecutionController.StateRequest:
+      required:
+      - state
+      - taskRunId
+      type: object
+      properties:
+        taskRunId:
+          type: string
+        state:
+          $ref: '#/components/schemas/State.Type'
+    ExecutionTrigger:
+      required:
+      - id
+      - type
+      - variables
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        variables:
+          type: object
+          additionalProperties: true
+    FileMetas:
+      required:
+      - size
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+    Flow:
+      required:
+      - deleted
+      - description
+      - disabled
+      - errors
+      - id
+      - inputs
+      - listeners
+      - namespace
+      - revision
+      - taskDefaults
+      - tasks
+      - triggers
+      - variables
+      type: object
+      properties:
+        id:
+          minLength: 1
+          pattern: "[a-zA-Z0-9._-]+"
+          type: string
+        namespace:
+          pattern: "[a-z0-9._-]+"
+          type: string
+        revision:
+          minimum: 1
+          type: integer
+          format: int32
+        description:
+          type: string
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/Input'
+        variables:
+          type: object
+          additionalProperties: true
+        tasks:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        listeners:
+          type: array
+          items:
+            $ref: '#/components/schemas/Listener'
+        triggers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AbstractTrigger'
+        taskDefaults:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskDefault'
+        disabled:
+          type: boolean
+        deleted:
+          type: boolean
+    FlowGraph:
+      required:
+      - clusters
+      - edges
+      - nodes
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/AbstractGraphTask'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowGraph.Edge'
+        clusters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowGraph.Cluster'
+    FlowGraph.Cluster:
+      required:
+      - cluster
+      - nodes
+      - parents
+      type: object
+      properties:
+        cluster:
+          $ref: '#/components/schemas/GraphCluster'
+        nodes:
+          type: array
+          items:
+            type: string
+        parents:
+          type: array
+          items:
+            type: string
+    FlowGraph.Edge:
+      required:
+      - relation
+      - source
+      - target
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        relation:
+          $ref: '#/components/schemas/Relation'
+    FlowNode:
+      required:
+      - id
+      - namespace
+      - uid
+      type: object
+      properties:
+        uid:
+          type: string
+        namespace:
+          type: string
+        id:
+          type: string
+    FlowRelation:
+      type: string
+      enum:
+      - FLOW_TASK
+      - FLOW_TRIGGER
+    FlowTopologyGraph:
+      required:
+      - edges
+      - nodes
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowNode'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlowTopologyGraph.Edge'
+    FlowTopologyGraph.Edge:
+      required:
+      - relation
+      - source
+      - target
+      type: object
+      properties:
+        source:
+          type: string
+        target:
+          type: string
+        relation:
+          $ref: '#/components/schemas/FlowRelation'
+    GraphCluster:
+      type: object
+      allOf:
+      - $ref: '#/components/schemas/AbstractGraphTask'
+    Group:
+      required:
+      - deleted
+      - description
+      - id
+      - name
+      - namespaceId
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        namespaceId:
+          type: string
+        description:
+          type: string
+        deleted:
+          type: boolean
+    Input:
+      required:
+      - name
+      - type
+      type: object
+      properties:
+        name:
+          minLength: 1
+          pattern: "[a-zA-Z0-9_-]+"
+          type: string
+        type:
+          $ref: '#/components/schemas/Input.Type'
+        description:
+          type: string
+        required:
+          type: boolean
+        defaults:
+          type: string
+    Input.Type:
+      type: string
+      enum:
+      - STRING
+      - INT
+      - FLOAT
+      - DATETIME
+      - FILE
+    Level:
+      type: string
+      enum:
+      - ERROR
+      - WARN
+      - INFO
+      - DEBUG
+      - TRACE
+    Listener:
+      required:
+      - conditions
+      - description
+      - tasks
+      type: object
+      properties:
+        description:
+          type: string
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Condition'
+        tasks:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    LogEntry:
+      required:
+      - attemptNumber
+      - deleted
+      - executionId
+      - flowId
+      - level
+      - message
+      - namespace
+      - taskId
+      - taskRunId
+      - thread
+      - timestamp
+      - triggerId
+      type: object
+      properties:
+        namespace:
+          type: string
+        flowId:
+          type: string
+        taskId:
+          type: string
+          nullable: true
+        executionId:
+          type: string
+          nullable: true
+        taskRunId:
+          type: string
+          nullable: true
+        attemptNumber:
+          type: integer
+          format: int32
+          nullable: true
+        triggerId:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          $ref: '#/components/schemas/Level'
+        thread:
+          type: string
+        message:
+          type: string
+        deleted:
+          type: boolean
+    MiscController.Version:
+      required:
+      - version
+      type: object
+      properties:
+        version:
+          type: string
+    Namespace:
+      required:
+      - allowedTriggers
+      - deleted
+      - description
+      - id
+      - taskDefaults
+      - variables
+      type: object
+      properties:
+        id:
+          pattern: "[a-z0-9.]+"
+          type: string
+        description:
+          type: string
+        variables:
+          type: object
+          additionalProperties: true
+        taskDefaults:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskDefault'
+        allowedTriggers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Namespace.AllowedTrigger'
+        deleted:
+          type: boolean
+    Namespace.AllowedTrigger:
+      required:
+      - flowId
+      - namespace
+      type: object
+      properties:
+        namespace:
+          type: string
+        flowId:
+          type: string
+    Object:
+      type: object
+    PagedResults_AuditLogController.AuditLogWithUser_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditLogController.AuditLogWithUser'
+        total:
+          type: integer
+          format: int64
+    PagedResults_BindingController.BindingDetail_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BindingController.BindingDetail'
+        total:
+          type: integer
+          format: int64
+    PagedResults_Execution_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Execution'
+        total:
+          type: integer
+          format: int64
+    PagedResults_Flow_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Flow'
+        total:
+          type: integer
+          format: int64
+    PagedResults_Group_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+        total:
+          type: integer
+          format: int64
+    PagedResults_LogEntry_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogEntry'
+        total:
+          type: integer
+          format: int64
+    PagedResults_Namespace_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Namespace'
+        total:
+          type: integer
+          format: int64
+    PagedResults_Role_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        total:
+          type: integer
+          format: int64
+    PagedResults_SearchResult_Flow__:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult_Flow_'
+        total:
+          type: integer
+          format: int64
+    PagedResults_TaskRun_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskRun'
+        total:
+          type: integer
+          format: int64
+    PagedResults_Template_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Template'
+        total:
+          type: integer
+          format: int64
+    PagedResults_UserController.ApiUser_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserController.ApiUser'
+        total:
+          type: integer
+          format: int64
+    PagedResults_User_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        total:
+          type: integer
+          format: int64
+    Permission:
+      type: string
+      enum:
+      - FLOW
+      - TEMPLATE
+      - NAMESPACE
+      - EXECUTION
+      - USER
+      - GROUP
+      - ROLE
+      - BINDING
+      - AUDITLOG
+      - SECRET
+      - IMPERSONATE
+    PluginController.Doc:
+      type: object
+      properties:
+        markdown:
+          type: string
+        schema:
+          $ref: '#/components/schemas/PluginController.Schema'
+    PluginController.Plugin:
+      type: object
+      properties:
+        manifest:
+          type: object
+          additionalProperties:
+            type: string
+        tasks:
+          type: array
+          items:
+            type: string
+        triggers:
+          type: array
+          items:
+            type: string
+        conditions:
+          type: array
+          items:
+            type: string
+        controllers:
+          type: array
+          items:
+            type: string
+        storages:
+          type: array
+          items:
+            type: string
+    PluginController.PluginIcon:
+      type: object
+      properties:
+        name:
+          type: string
+        icon:
+          type: string
+        flowable:
+          type: boolean
+    PluginController.Schema:
+      type: object
+      properties:
+        properties:
+          type: object
+          additionalProperties: true
+        outputs:
+          type: object
+          additionalProperties: true
+        definitions:
+          type: object
+          additionalProperties: true
+    PluginController.SchemaType:
+      type: string
+      enum:
+      - flow
+      - template
+      - task
+    Relation:
+      required:
+      - relationType
+      - value
+      type: object
+      properties:
+        relationType:
+          $ref: '#/components/schemas/RelationType'
+        value:
+          type: string
+    RelationType:
+      type: string
+      enum:
+      - SEQUENTIAL
+      - CHOICE
+      - ERROR
+      - PARALLEL
+      - DYNAMIC
+    Role:
+      required:
+      - deleted
+      - description
+      - id
+      - name
+      - namespaceId
+      - permissions
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        namespaceId:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/Action'
+        deleted:
+          type: boolean
+    SearchResult_Flow_:
+      required:
+      - fragments
+      - model
+      type: object
+      properties:
+        model:
+          $ref: '#/components/schemas/Flow'
+        fragments:
+          type: array
+          items:
+            type: string
+    State:
+      required:
+      - current
+      type: object
+      properties:
+        duration:
+          $ref: '#/components/schemas/Duration'
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        current:
+          $ref: '#/components/schemas/State.Type'
+        histories:
+          type: array
+          items:
+            $ref: '#/components/schemas/State.History'
+    State.History:
+      required:
+      - date
+      - state
+      type: object
+      properties:
+        state:
+          $ref: '#/components/schemas/State.Type'
+        date:
+          type: string
+          format: date-time
+    State.Type:
+      type: string
+      enum:
+      - CREATED
+      - RUNNING
+      - PAUSED
+      - RESTARTED
+      - KILLING
+      - SUCCESS
+      - WARNING
+      - FAILED
+      - KILLED
+    Task:
+      required:
+      - id
+      - type
+      type: object
+      properties:
+        id:
+          minLength: 1
+          pattern: "[a-zA-Z0-9_-]+"
+          type: string
+        type:
+          minLength: 1
+          pattern: "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*(\\.\\\
+            p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)*"
+          type: string
+        description:
+          type: string
+        retry:
+          $ref: '#/components/schemas/AbstractRetry'
+        timeout:
+          $ref: '#/components/schemas/Duration'
+        disabled:
+          type: boolean
+    TaskDefault:
+      required:
+      - forced
+      - type
+      - values
+      type: object
+      properties:
+        type:
+          type: string
+        forced:
+          type: boolean
+        values:
+          type: object
+          additionalProperties: true
+    TaskRun:
+      required:
+      - attempts
+      - executionId
+      - flowId
+      - id
+      - namespace
+      - outputs
+      - parentTaskRunId
+      - state
+      - taskId
+      - value
+      type: object
+      properties:
+        id:
+          type: string
+        executionId:
+          type: string
+        namespace:
+          type: string
+        flowId:
+          type: string
+        taskId:
+          type: string
+        parentTaskRunId:
+          type: string
+        value:
+          type: string
+        attempts:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskRunAttempt'
+        outputs:
+          type: object
+          additionalProperties: true
+        state:
+          $ref: '#/components/schemas/State'
+    TaskRunAttempt:
+      required:
+      - metrics
+      - state
+      type: object
+      properties:
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/AbstractMetricEntry_Object_'
+        state:
+          $ref: '#/components/schemas/State'
+    Template:
+      required:
+      - deleted
+      - errors
+      - id
+      - namespace
+      - tasks
+      type: object
+      properties:
+        id:
+          minLength: 1
+          pattern: "[a-zA-Z0-9._-]+"
+          type: string
+        namespace:
+          pattern: "[a-z0-9._-]+"
+          type: string
+        tasks:
+          minItems: 1
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        deleted:
+          type: boolean
+    TemporalUnit:
+      type: object
+      properties:
+        duration:
+          $ref: '#/components/schemas/Duration'
+        durationEstimated:
+          type: boolean
+        dateBased:
+          type: boolean
+        timeBased:
+          type: boolean
+    User:
+      allOf:
+      - $ref: '#/components/schemas/AbstractUser'
+      - required:
+        - deleted
+        type: object
+        properties:
+          auths:
+            type: array
+            items:
+              $ref: '#/components/schemas/AbstractAuth'
+          deleted:
+            type: boolean
+    UserController.ApiUser:
+      allOf:
+      - $ref: '#/components/schemas/AbstractUser'
+      - type: object
+        properties:
+          auths:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserController.Auth'
+    UserController.Auth:
+      required:
+      - name
+      - type
+      - uid
+      type: object
+      properties:
+        uid:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
