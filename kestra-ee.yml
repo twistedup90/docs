@@ -2079,19 +2079,16 @@ paths:
       - Stats
       summary: Get daily statistics for executions
       operationId: dailyStatistics
-      parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
+                q:
+                  type: string
+                  description: Lucene string filter
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
@@ -2118,19 +2115,16 @@ paths:
       - Stats
       summary: Get daily statistics for executions group by namespaces and flows
       operationId: dailyGroupByFlowStatistics
-      parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
+                q:
+                  type: string
+                  description: Lucene string filter
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
@@ -2165,19 +2159,16 @@ paths:
       - Stats
       summary: Get daily statistics for taskRuns
       operationId: taskRunsDailyStatistics
-      parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
+      parameters: []
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
+                q:
+                  type: string
+                  description: Lucene string filter
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
