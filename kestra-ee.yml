@@ -264,6 +264,20 @@ paths:
       responses:
         "204":
           description: On success
+  /api/v1/configs:
+    get:
+      tags:
+      - Misc
+      summary: Get current configurations
+      operationId: configuration
+      parameters: []
+      responses:
+        "200":
+          description: configuration 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiscController.Configuration'
   /api/v1/executions:
     get:
       tags:
@@ -313,12 +327,6 @@ paths:
       summary: Search for executions
       operationId: find_2
       parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
       - name: page
         in: query
         description: The current page
@@ -344,6 +352,43 @@ paths:
           nullable: true
           items:
             type: string
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: flowId
+        in: query
+        description: A flow id filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: startDate
+        in: query
+        description: The start datetime
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: endDate
+        in: query
+        description: The end datetime
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
       - name: state
         in: query
         description: A state filter
@@ -760,12 +805,6 @@ paths:
       summary: Search for flows
       operationId: find_3
       parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
       - name: page
         in: query
         description: The current page
@@ -791,6 +830,20 @@ paths:
           nullable: true
           items:
             type: string
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        required: false
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: find_3 200 response
@@ -805,12 +858,6 @@ paths:
       summary: Search for flows source code
       operationId: source
       parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
       - name: page
         in: query
         description: The current page
@@ -836,6 +883,20 @@ paths:
           nullable: true
           items:
             type: string
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        required: false
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: source 200 response
@@ -1383,9 +1444,10 @@ paths:
       - name: q
         in: query
         description: Lucene string filter
-        required: true
+        required: false
         schema:
           type: string
+          nullable: true
       - name: page
         in: query
         description: The current page
@@ -1419,6 +1481,22 @@ paths:
           allOf:
           - $ref: '#/components/schemas/Level'
           - nullable: true
+      - name: startDate
+        in: query
+        description: The start datetime
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: endDate
+        in: query
+        description: The end datetime
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
       responses:
         "200":
           description: find_5 200 response
@@ -2079,16 +2157,28 @@ paths:
       - Stats
       summary: Get daily statistics for executions
       operationId: dailyStatistics
-      parameters: []
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                q:
+                namespace:
                   type: string
-                  description: Lucene string filter
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
@@ -2115,16 +2205,28 @@ paths:
       - Stats
       summary: Get daily statistics for executions group by namespaces and flows
       operationId: dailyGroupByFlowStatistics
-      parameters: []
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                q:
+                namespace:
                   type: string
-                  description: Lucene string filter
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
@@ -2159,16 +2261,28 @@ paths:
       - Stats
       summary: Get daily statistics for taskRuns
       operationId: taskRunsDailyStatistics
-      parameters: []
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                q:
+                namespace:
                   type: string
-                  description: Lucene string filter
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
@@ -2196,12 +2310,6 @@ paths:
       summary: Search for taskruns
       operationId: findTaskRun
       parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
       - name: page
         in: query
         description: The current page
@@ -2218,14 +2326,6 @@ paths:
           type: integer
           format: int32
           default: 10
-      - name: state
-        in: query
-        required: false
-        schema:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/State.Type'
       - name: sort
         in: query
         description: The sort of current page
@@ -2235,6 +2335,52 @@ paths:
           nullable: true
           items:
             type: string
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: flowId
+        in: query
+        description: A flow id filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: startDate
+        in: query
+        description: The start datetime
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: endDate
+        in: query
+        description: The end datetime
+        required: false
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: state
+        in: query
+        description: A state filter
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
       responses:
         "200":
           description: findTaskRun 200 response
@@ -2619,20 +2765,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserController.ApiUser'
-  /api/v1/version:
-    get:
-      tags:
-      - Misc
-      summary: Get current version
-      operationId: version
-      parameters: []
-      responses:
-        "200":
-          description: version 200 response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MiscController.Version'
 components:
   schemas:
     AbstractAuth:
@@ -3318,13 +3450,16 @@ components:
           type: string
         deleted:
           type: boolean
-    MiscController.Version:
+    MiscController.Configuration:
       required:
+      - isTaskRunEnabled
       - version
       type: object
       properties:
         version:
           type: string
+        isTaskRunEnabled:
+          type: boolean
     Namespace:
       required:
       - allowedTriggers
