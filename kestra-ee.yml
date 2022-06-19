@@ -844,6 +844,15 @@ paths:
         schema:
           type: string
           nullable: true
+      - name: labels
+        in: query
+        description: A labels filter
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
       responses:
         "200":
           description: find_3 200 response
@@ -3180,6 +3189,7 @@ components:
       - errors
       - id
       - inputs
+      - labels
       - listeners
       - namespace
       - revision
@@ -3202,6 +3212,10 @@ components:
           format: int32
         description:
           type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
         inputs:
           type: array
           items:
