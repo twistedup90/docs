@@ -2440,12 +2440,6 @@ paths:
       summary: Search for templates
       operationId: find_8
       parameters:
-      - name: q
-        in: query
-        description: Lucene string filter
-        required: true
-        schema:
-          type: string
       - name: page
         in: query
         description: The current page
@@ -2471,6 +2465,20 @@ paths:
           nullable: true
           items:
             type: string
+      - name: q
+        in: query
+        description: A string filter
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        required: false
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: find_8 200 response
