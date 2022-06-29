@@ -77,7 +77,9 @@ paths:
                 permission:
                   $ref: '#/components/schemas/Permission'
                 type:
-                  $ref: '#/components/schemas/CrudEventType'
+                  nullable: true
+                  oneOf:
+                  - $ref: '#/components/schemas/CrudEventType'
                 detail:
                   type: object
                   additionalProperties: true
@@ -212,9 +214,9 @@ paths:
         description: Binding type filter
         required: false
         schema:
-          allOf:
+          nullable: true
+          oneOf:
           - $ref: '#/components/schemas/Binding.Type'
-          - nullable: true
       - name: id
         in: query
         description: External id filter
@@ -1084,6 +1086,7 @@ paths:
         schema:
           type: integer
           format: int32
+          nullable: true
       responses:
         "200":
           description: flowGraph_1 200 response
@@ -1487,9 +1490,9 @@ paths:
         description: The min log level filter
         required: false
         schema:
-          allOf:
+          nullable: true
+          oneOf:
           - $ref: '#/components/schemas/Level'
-          - nullable: true
       - name: startDate
         in: query
         description: The start datetime
@@ -1531,9 +1534,9 @@ paths:
         description: The min log level filter
         required: false
         schema:
-          allOf:
+          nullable: true
+          oneOf:
           - $ref: '#/components/schemas/Level'
-          - nullable: true
       - name: taskRunId
         in: query
         description: The taskrun id
@@ -1575,9 +1578,9 @@ paths:
         description: The min log level filter
         required: false
         schema:
-          allOf:
+          nullable: true
+          oneOf:
           - $ref: '#/components/schemas/Level'
-          - nullable: true
       responses:
         "200":
           description: follow_1 200 response
@@ -2845,6 +2848,8 @@ components:
     AbstractTrigger:
       required:
       - disabled
+      - id
+      - type
       type: object
       properties:
         id:
@@ -3835,6 +3840,7 @@ components:
         endDate:
           type: string
           format: date-time
+          nullable: true
         current:
           $ref: '#/components/schemas/State.Type'
         histories:
