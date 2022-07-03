@@ -1485,6 +1485,20 @@ paths:
           nullable: true
           items:
             type: string
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: flowId
+        in: query
+        description: A flow id filter
+        required: false
+        schema:
+          type: string
+          nullable: true
       - name: minLevel
         in: query
         description: The min log level filter
