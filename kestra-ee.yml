@@ -3416,8 +3416,13 @@ components:
       - STRING
       - INT
       - FLOAT
+      - BOOLEAN
       - DATETIME
+      - DATE
+      - TIME
+      - DURATION
       - FILE
+      - JSON
     Level:
       type: string
       enum:
