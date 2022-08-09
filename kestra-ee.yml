@@ -561,6 +561,21 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Execution'
+    delete:
+      tags:
+      - Flows
+      summary: Delete an execution
+      operationId: delete_1
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: On success
   /api/v1/executions/{executionId}/file:
     get:
       tags:
@@ -1009,7 +1024,7 @@ paths:
       tags:
       - Flows
       summary: Delete a flow
-      operationId: delete_1
+      operationId: delete_2
       parameters:
       - name: namespace
         in: path
@@ -1334,7 +1349,7 @@ paths:
       tags:
       - Groups
       summary: Delete a group
-      operationId: delete_2
+      operationId: delete_3
       parameters:
       - name: id
         in: path
@@ -1762,7 +1777,7 @@ paths:
       tags:
       - Namespaces
       summary: Delete a flow
-      operationId: delete_3
+      operationId: delete_4
       parameters:
       - name: id
         in: path
@@ -2166,7 +2181,7 @@ paths:
       tags:
       - Roles
       summary: Delete a role
-      operationId: delete_4
+      operationId: delete_5
       parameters:
       - name: id
         in: path
@@ -2564,7 +2579,7 @@ paths:
       tags:
       - Template
       summary: Delete a template
-      operationId: delete_5
+      operationId: delete_6
       parameters:
       - name: namespace
         in: path
@@ -2732,7 +2747,7 @@ paths:
       tags:
       - Users
       summary: Delete a user
-      operationId: delete_6
+      operationId: delete_7
       parameters:
       - name: id
         in: path
