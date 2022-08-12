@@ -3514,9 +3514,12 @@ components:
     MiscController.Configuration:
       required:
       - isTaskRunEnabled
+      - uuid
       - version
       type: object
       properties:
+        uuid:
+          type: string
         version:
           type: string
         isTaskRunEnabled:
@@ -3744,6 +3747,7 @@ components:
       - AUDITLOG
       - SECRET
       - IMPERSONATE
+      - SETTING
     PluginController.Doc:
       type: object
       properties:
