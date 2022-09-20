@@ -2349,6 +2349,14 @@ paths:
         schema:
           type: string
           nullable: true
+      - name: flows
+        description: A list of flows filter
+        required: false
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/ExecutionRepositoryInterface.FlowFilter'
       - name: startDate
         description: "The start datetime, default to now - 30 days"
         required: false
@@ -2383,6 +2391,12 @@ paths:
                   type: string
                   description: A flow id filter
                   nullable: true
+                flows:
+                  type: array
+                  description: A list of flows filter
+                  nullable: true
+                  items:
+                    $ref: '#/components/schemas/ExecutionRepositoryInterface.FlowFilter'
                 startDate:
                   type: string
                   description: "The start datetime, default to now - 30 days"
@@ -3537,6 +3551,16 @@ components:
           type: string
         state:
           $ref: '#/components/schemas/State.Type'
+    ExecutionRepositoryInterface.FlowFilter:
+      required:
+      - id
+      - namespace
+      type: object
+      properties:
+        namespace:
+          type: string
+        id:
+          type: string
     ExecutionTrigger:
       required:
       - id
@@ -4307,6 +4331,7 @@ components:
     Template:
       required:
       - deleted
+      - description
       - errors
       - id
       - namespace
@@ -4319,6 +4344,8 @@ components:
           type: string
         namespace:
           pattern: "[a-z0-9._-]+"
+          type: string
+        description:
           type: string
         tasks:
           minItems: 1
