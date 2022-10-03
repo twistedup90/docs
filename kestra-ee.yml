@@ -73,10 +73,9 @@ paths:
           $ref: '#/components/schemas/Permission'
       - name: type
         description: the crud type filter
-        required: false
         schema:
           nullable: true
-          oneOf:
+          allOf:
           - $ref: '#/components/schemas/CrudEventType'
       - name: detail
         description: the detail filters
@@ -94,7 +93,7 @@ paths:
                   $ref: '#/components/schemas/Permission'
                 type:
                   nullable: true
-                  oneOf:
+                  allOf:
                   - $ref: '#/components/schemas/CrudEventType'
                 detail:
                   type: object
@@ -140,7 +139,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -217,7 +215,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -226,15 +223,13 @@ paths:
       - name: type
         in: query
         description: Binding type filter
-        required: false
         schema:
           nullable: true
-          oneOf:
+          allOf:
           - $ref: '#/components/schemas/Binding.Type'
       - name: id
         in: query
         description: External id filter
-        required: false
         schema:
           type: string
           nullable: true
@@ -361,7 +356,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -370,28 +364,24 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: flowId
         in: query
         description: A flow id filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: startDate
         in: query
         description: The start datetime
-        required: false
         schema:
           type: string
           format: date-time
@@ -399,7 +389,6 @@ paths:
       - name: endDate
         in: query
         description: The end datetime
-        required: false
         schema:
           type: string
           format: date-time
@@ -407,12 +396,17 @@ paths:
       - name: state
         in: query
         description: A state filter
-        required: false
         schema:
           type: array
           nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: find_2 200 response
@@ -458,8 +452,12 @@ paths:
                     format: binary
         required: true
       responses:
-        "409":
-          description: if the flow is disabled
+        "200":
+          description: trigger 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
   /api/v1/executions/webhook/{namespace}/{id}/{key}:
     get:
       tags:
@@ -587,8 +585,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: On success
+        "200":
+          description: delete_1 200 response
   /api/v1/executions/{executionId}/file:
     get:
       tags:
@@ -698,10 +696,12 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: On success
-        "409":
-          description: if the executions is already finished
+        "200":
+          description: kill 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Object'
   /api/v1/executions/{executionId}/replay:
     post:
       tags:
@@ -719,14 +719,12 @@ paths:
       - name: taskRunId
         in: query
         description: The taskrun id
-        required: false
         schema:
           type: string
           nullable: true
       - name: revision
         in: query
         description: The flow revision to use for new execution
-        required: false
         schema:
           type: integer
           format: int32
@@ -754,7 +752,6 @@ paths:
       - name: revision
         in: query
         description: The flow revision to use for new execution
-        required: false
         schema:
           type: integer
           format: int32
@@ -852,7 +849,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -861,26 +857,29 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: labels
         in: query
         description: A labels filter
-        required: false
         schema:
           type: array
           nullable: true
           items:
             type: string
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: find_3 200 response
@@ -914,7 +913,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -923,14 +921,18 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
-        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
         schema:
           type: string
           nullable: true
@@ -1050,8 +1052,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: On success
+        "200":
+          description: delete_2 200 response
   /api/v1/flows/{namespace}/{id}/dependencies:
     get:
       tags:
@@ -1108,7 +1110,6 @@ paths:
       - name: revision
         in: query
         description: The flow revision
-        required: false
         schema:
           type: integer
           format: int32
@@ -1219,7 +1220,6 @@ paths:
           type: string
       - name: ids
         description: The ids that must be present on results
-        required: false
         schema:
           type: array
           nullable: true
@@ -1317,7 +1317,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -1427,7 +1426,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -1501,7 +1499,6 @@ paths:
       - name: q
         in: query
         description: Lucene string filter
-        required: false
         schema:
           type: string
           nullable: true
@@ -1524,7 +1521,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -1533,29 +1529,25 @@ paths:
       - name: namespace
         in: query
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: flowId
         in: query
         description: A flow id filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: minLevel
         in: query
         description: The min log level filter
-        required: false
         schema:
           nullable: true
-          oneOf:
+          allOf:
           - $ref: '#/components/schemas/Level'
       - name: startDate
         in: query
         description: The start datetime
-        required: false
         schema:
           type: string
           format: date-time
@@ -1563,10 +1555,15 @@ paths:
       - name: endDate
         in: query
         description: The end datetime
-        required: false
         schema:
           type: string
           format: date-time
+          nullable: true
+      - name: q
+        in: query
+        description: Lucene string filter
+        schema:
+          type: string
           nullable: true
       responses:
         "200":
@@ -1591,22 +1588,19 @@ paths:
       - name: minLevel
         in: query
         description: The min log level filter
-        required: false
         schema:
           nullable: true
-          oneOf:
+          allOf:
           - $ref: '#/components/schemas/Level'
       - name: taskRunId
         in: query
         description: The taskrun id
-        required: false
         schema:
           type: string
           nullable: true
       - name: taskId
         in: query
         description: The task id
-        required: false
         schema:
           type: string
           nullable: true
@@ -1635,10 +1629,9 @@ paths:
       - name: minLevel
         in: query
         description: The min log level filter
-        required: false
         schema:
           nullable: true
-          oneOf:
+          allOf:
           - $ref: '#/components/schemas/Level'
       responses:
         "200":
@@ -1693,7 +1686,6 @@ paths:
           type: string
       - name: ids
         description: The namespace ids that must be present on results
-        required: false
         schema:
           type: array
           nullable: true
@@ -1756,7 +1748,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -2176,7 +2167,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -2259,35 +2249,36 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: flowId
         description: A flow id filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: startDate
         description: "The start datetime, default to now - 30 days"
-        required: false
         schema:
           type: string
           format: date-time
           nullable: true
       - name: endDate
         description: "The end datetime, default to now"
-        required: false
         schema:
           type: string
           format: date-time
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
           nullable: true
       requestBody:
         content:
@@ -2333,25 +2324,21 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: flowId
         description: A flow id filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: flows
         description: A list of flows filter
-        required: false
         schema:
           type: array
           nullable: true
@@ -2359,23 +2346,26 @@ paths:
             $ref: '#/components/schemas/ExecutionRepositoryInterface.FlowFilter'
       - name: startDate
         description: "The start datetime, default to now - 30 days"
-        required: false
         schema:
           type: string
           format: date-time
           nullable: true
       - name: endDate
         description: "The end datetime, default to now"
-        required: false
         schema:
           type: string
           format: date-time
           nullable: true
       - name: namespaceOnly
         description: Return only namespace result and skip flows
-        required: false
         schema:
           type: boolean
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
           nullable: true
       requestBody:
         content:
@@ -2435,35 +2425,36 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: flowId
         description: A flow id filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: startDate
         description: "The start datetime, default to now - 30 days"
-        required: false
         schema:
           type: string
           format: date-time
           nullable: true
       - name: endDate
         description: "The end datetime, default to now"
-        required: false
         schema:
           type: string
           format: date-time
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
           nullable: true
       requestBody:
         content:
@@ -2525,7 +2516,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -2534,28 +2524,24 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
-        required: false
         schema:
           type: string
           nullable: true
       - name: flowId
         in: query
         description: A flow id filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: startDate
         in: query
         description: The start datetime
-        required: false
         schema:
           type: string
           format: date-time
@@ -2563,7 +2549,6 @@ paths:
       - name: endDate
         in: query
         description: The end datetime
-        required: false
         schema:
           type: string
           format: date-time
@@ -2571,12 +2556,17 @@ paths:
       - name: state
         in: query
         description: A state filter
-        required: false
         schema:
           type: array
           nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
       responses:
         "200":
           description: findTaskRun 200 response
@@ -2644,7 +2634,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -2653,14 +2642,18 @@ paths:
       - name: q
         in: query
         description: A string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
-        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
         schema:
           type: string
           nullable: true
@@ -2747,8 +2740,8 @@ paths:
         schema:
           type: string
       responses:
-        "204":
-          description: On success
+        "200":
+          description: delete_6 200 response
   /api/v1/users:
     post:
       tags:
@@ -2777,13 +2770,11 @@ paths:
       parameters:
       - name: q
         description: Lucene string filter
-        required: false
         schema:
           type: string
           nullable: true
       - name: ids
         description: The ids that must be present on results
-        required: false
         schema:
           type: array
           nullable: true
@@ -2791,7 +2782,6 @@ paths:
             type: string
       - name: username
         description: An Username filter
-        required: false
         schema:
           type: string
           nullable: true
@@ -2857,7 +2847,6 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
-        required: false
         schema:
           type: array
           nullable: true
@@ -3775,7 +3764,7 @@ components:
       properties:
         name:
           minLength: 1
-          pattern: "[a-zA-Z0-9_-]+"
+          pattern: "[.a-zA-Z0-9_-]+"
           type: string
         type:
           $ref: '#/components/schemas/Input.Type'
@@ -3798,6 +3787,7 @@ components:
       - DURATION
       - FILE
       - JSON
+      - URI
     Level:
       type: string
       enum:
