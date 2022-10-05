@@ -1149,6 +1149,38 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Flow'
+  /api/v1/flows/{namespace}/{id}/tasks/{taskId}:
+    get:
+      tags:
+      - Flows
+      summary: Get a flow task
+      operationId: flowTask
+      parameters:
+      - name: namespace
+        in: path
+        description: The flow namespace
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The flow id
+        required: true
+        schema:
+          type: string
+      - name: taskId
+        in: path
+        description: The task id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: flowTask 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Task'
   /api/v1/flows/{namespace}/{id}/{taskId}:
     patch:
       tags:
