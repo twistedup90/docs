@@ -433,6 +433,28 @@ paths:
         required: true
         schema:
           type: string
+      - name: inputs
+        description: The inputs
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+          nullable: true
+      - name: files
+        description: The inputs of type file
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+            format: binary
+      - name: wait
+        in: query
+        description: If the server will wait the end of the execution
+        required: true
+        schema:
+          type: boolean
+          default: false
       requestBody:
         content:
           multipart/form-data:
@@ -443,9 +465,11 @@ paths:
                   type: object
                   additionalProperties:
                     type: string
+                  description: The inputs
                   nullable: true
                 files:
                   type: array
+                  description: The inputs of type file
                   nullable: true
                   items:
                     type: string
@@ -574,7 +598,7 @@ paths:
                 $ref: '#/components/schemas/Execution'
     delete:
       tags:
-      - Flows
+      - Executions
       summary: Delete an execution
       operationId: delete_1
       parameters:
