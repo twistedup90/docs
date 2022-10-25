@@ -611,6 +611,38 @@ paths:
       responses:
         "200":
           description: delete_1 200 response
+  /api/v1/executions/{executionId}/eval/{taskRunId}:
+    post:
+      tags:
+      - Executions
+      summary: Evaluate a variable expression for this taskrun
+      operationId: eval
+      parameters:
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: taskRunId
+        in: path
+        description: The taskrun id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: eval 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionController.EvalResult'
   /api/v1/executions/{executionId}/file:
     get:
       tags:
@@ -3586,6 +3618,15 @@ components:
           $ref: '#/components/schemas/ExecutionTrigger'
         deleted:
           type: boolean
+    ExecutionController.EvalResult:
+      type: object
+      properties:
+        result:
+          type: string
+        error:
+          type: string
+        stackTrace:
+          type: string
     ExecutionController.StateRequest:
       required:
       - state
