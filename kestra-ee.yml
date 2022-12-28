@@ -4019,6 +4019,7 @@ components:
           type: boolean
     MiscController.Configuration:
       required:
+      - isAnonymousUsageEnabled
       - isTaskRunEnabled
       - uuid
       - version
@@ -4029,6 +4030,8 @@ components:
         version:
           type: string
         isTaskRunEnabled:
+          type: boolean
+        isAnonymousUsageEnabled:
           type: boolean
     Namespace:
       required:
