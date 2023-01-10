@@ -66,23 +66,9 @@ paths:
       summary: Find audit logs
       operationId: find
       parameters:
-      - name: permission
-        description: the permission filter
-        required: true
-        schema:
-          $ref: '#/components/schemas/Permission'
-      - name: type
-        description: the crud type filter
-        schema:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/CrudEventType'
-      - name: detail
-        description: the detail filters
-        required: true
-        schema:
-          type: object
-          additionalProperties: true
+      - null
+      - null
+      - null
       requestBody:
         content:
           application/json:
@@ -165,6 +151,12 @@ paths:
       - name: userId
         in: query
         description: A user id filter
+        schema:
+          type: string
+          nullable: true
+      - name: id
+        in: query
+        description: A id filter
         schema:
           type: string
           nullable: true
@@ -470,21 +462,8 @@ paths:
         required: true
         schema:
           type: string
-      - name: inputs
-        description: The inputs
-        schema:
-          type: object
-          additionalProperties:
-            type: string
-          nullable: true
-      - name: files
-        description: The inputs of type file
-        schema:
-          type: array
-          nullable: true
-          items:
-            type: string
-            format: binary
+      - null
+      - null
       - name: wait
         in: query
         description: If the server will wait the end of the execution
@@ -1338,18 +1317,8 @@ paths:
       summary: List groups for autocomplete
       operationId: autocomplete
       parameters:
-      - name: q
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
-      - name: ids
-        description: The ids that must be present on results
-        schema:
-          type: array
-          nullable: true
-          items:
-            type: string
+      - null
+      - null
       requestBody:
         content:
           application/json:
@@ -1383,13 +1352,7 @@ paths:
       summary: List groups by ids
       operationId: ids
       parameters:
-      - name: ids
-        description: The ids that must be present on results
-        required: true
-        schema:
-          type: array
-          items:
-            type: string
+      - null
       requestBody:
         content:
           application/json:
@@ -1811,18 +1774,8 @@ paths:
       summary: List namespaces for autocomplete
       operationId: autocomplete_1
       parameters:
-      - name: q
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
-      - name: ids
-        description: The namespace ids that must be present on results
-        schema:
-          type: array
-          nullable: true
-          items:
-            type: string
+      - null
+      - null
       requestBody:
         content:
           application/json:
@@ -2197,18 +2150,8 @@ paths:
       summary: List roles for autocomplete
       operationId: autocomplete_2
       parameters:
-      - name: q
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
-      - name: ids
-        description: The ids that must be present on results
-        schema:
-          type: array
-          nullable: true
-          items:
-            type: string
+      - null
+      - null
       requestBody:
         content:
           application/json:
@@ -2242,13 +2185,7 @@ paths:
       description: List roles by ids
       operationId: ids_1
       parameters:
-      - name: ids
-        description: The ids that must be present on results
-        required: true
-        schema:
-          type: array
-          items:
-            type: string
+      - null
       requestBody:
         content:
           application/json:
@@ -2393,28 +2330,10 @@ paths:
         schema:
           type: string
           nullable: true
-      - name: namespace
-        description: A namespace filter prefix
-        schema:
-          type: string
-          nullable: true
-      - name: flowId
-        description: A flow id filter
-        schema:
-          type: string
-          nullable: true
-      - name: startDate
-        description: "The start datetime, default to now - 30 days"
-        schema:
-          type: string
-          format: date-time
-          nullable: true
-      - name: endDate
-        description: "The end datetime, default to now"
-        schema:
-          type: string
-          format: date-time
-          nullable: true
+      - null
+      - null
+      - null
+      - null
       - name: q
         in: query
         description: A string filter
@@ -2468,40 +2387,12 @@ paths:
         schema:
           type: string
           nullable: true
-      - name: namespace
-        description: A namespace filter prefix
-        schema:
-          type: string
-          nullable: true
-      - name: flowId
-        description: A flow id filter
-        schema:
-          type: string
-          nullable: true
-      - name: flows
-        description: A list of flows filter
-        schema:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/ExecutionRepositoryInterface.FlowFilter'
-      - name: startDate
-        description: "The start datetime, default to now - 30 days"
-        schema:
-          type: string
-          format: date-time
-          nullable: true
-      - name: endDate
-        description: "The end datetime, default to now"
-        schema:
-          type: string
-          format: date-time
-          nullable: true
-      - name: namespaceOnly
-        description: Return only namespace result and skip flows
-        schema:
-          type: boolean
-          nullable: true
+      - null
+      - null
+      - null
+      - null
+      - null
+      - null
       - name: q
         in: query
         description: A string filter
@@ -2569,28 +2460,10 @@ paths:
         schema:
           type: string
           nullable: true
-      - name: namespace
-        description: A namespace filter prefix
-        schema:
-          type: string
-          nullable: true
-      - name: flowId
-        description: A flow id filter
-        schema:
-          type: string
-          nullable: true
-      - name: startDate
-        description: "The start datetime, default to now - 30 days"
-        schema:
-          type: string
-          format: date-time
-          nullable: true
-      - name: endDate
-        description: "The end datetime, default to now"
-        schema:
-          type: string
-          format: date-time
-          nullable: true
+      - null
+      - null
+      - null
+      - null
       - name: q
         in: query
         description: A string filter
@@ -2909,23 +2782,9 @@ paths:
       summary: List users for autocomplete
       operationId: autocomplete_3
       parameters:
-      - name: q
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
-      - name: ids
-        description: The ids that must be present on results
-        schema:
-          type: array
-          nullable: true
-          items:
-            type: string
-      - name: username
-        description: An Username filter
-        schema:
-          type: string
-          nullable: true
+      - null
+      - null
+      - null
       requestBody:
         content:
           application/json:
@@ -3105,11 +2964,7 @@ paths:
         required: true
         schema:
           type: string
-      - name: password
-        description: The password
-        required: true
-        schema:
-          type: string
+      - null
       requestBody:
         content:
           application/json:
