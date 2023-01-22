@@ -359,6 +359,258 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/PagedResults_Execution_'
+  /api/v1/executions/by-ids:
+    delete:
+      tags:
+      - Executions
+      summary: Delete a list of executions
+      operationId: deleteByIds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: deleteByIds 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /api/v1/executions/kill/by-ids:
+    delete:
+      tags:
+      - Executions
+      summary: Kill a list of executions
+      operationId: killByIds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: killByIds 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /api/v1/executions/kill/query:
+    delete:
+      tags:
+      - Executions
+      summary: Kill executions filter by query parameters
+      operationId: killByQuery
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - null
+      - null
+      - null
+      - null
+      - name: state
+        in: query
+        description: A state filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namespace:
+                  type: string
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
+                startDate:
+                  type: string
+                  description: The start datetime
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: The end datetime
+                  format: date-time
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: killByQuery 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionController.BulkResponse'
+  /api/v1/executions/query:
+    delete:
+      tags:
+      - Executions
+      summary: Delete executions filter by query parameters
+      operationId: deleteByQuery
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - null
+      - null
+      - null
+      - null
+      - name: state
+        in: query
+        description: A state filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namespace:
+                  type: string
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
+                startDate:
+                  type: string
+                  description: The start datetime
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: The end datetime
+                  format: date-time
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: deleteByQuery 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionController.BulkResponse'
+  /api/v1/executions/restart/by-ids:
+    post:
+      tags:
+      - Executions
+      summary: Restart a list of executions
+      operationId: restartByIds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: restartByIds 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /api/v1/executions/restart/query:
+    post:
+      tags:
+      - Executions
+      summary: Restart executions filter by query parameters
+      operationId: restartByQuery
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - null
+      - null
+      - null
+      - null
+      - name: state
+        in: query
+        description: A state filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namespace:
+                  type: string
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
+                startDate:
+                  type: string
+                  description: The start datetime
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: The end datetime
+                  format: date-time
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: restartByQuery 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionController.BulkResponse'
   /api/v1/executions/search:
     get:
       tags:
@@ -2324,28 +2576,21 @@ paths:
       summary: Get daily statistics for executions
       operationId: dailyStatistics
       parameters:
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
       - null
       - null
       - null
       - null
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
+      - null
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
+                q:
+                  type: string
+                  description: A string filter
+                  nullable: true
                 namespace:
                   type: string
                   description: A namespace filter prefix
@@ -2381,30 +2626,23 @@ paths:
       summary: Get daily statistics for executions group by namespaces and flows
       operationId: dailyGroupByFlowStatistics
       parameters:
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
       - null
       - null
       - null
       - null
       - null
       - null
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
+      - null
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
+                q:
+                  type: string
+                  description: A string filter
+                  nullable: true
                 namespace:
                   type: string
                   description: A namespace filter prefix
@@ -2454,28 +2692,21 @@ paths:
       summary: Get daily statistics for taskRuns
       operationId: taskRunsDailyStatistics
       parameters:
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
       - null
       - null
       - null
       - null
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
+      - null
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
+                q:
+                  type: string
+                  description: A string filter
+                  nullable: true
                 namespace:
                   type: string
                   description: A namespace filter prefix
@@ -3532,6 +3763,12 @@ components:
           $ref: '#/components/schemas/ExecutionTrigger'
         deleted:
           type: boolean
+    ExecutionController.BulkResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
     ExecutionController.EvalResult:
       type: object
       properties:
