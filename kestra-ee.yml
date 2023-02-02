@@ -1117,11 +1117,14 @@ paths:
     post:
       tags:
       - Flows
-      summary: Create a flow
+      summary: Create a flow from yaml source
       operationId: create_1
       requestBody:
         content:
-          application/json:
+          application/x-yaml:
+            schema:
+              type: string
+          '*/*':
             schema:
               $ref: '#/components/schemas/Flow'
         required: true
@@ -1131,7 +1134,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/Flow'
+                $ref: '#/components/schemas/FlowWithSource'
   /api/v1/flows/distinct-namespaces:
     get:
       tags:
@@ -1271,10 +1274,10 @@ paths:
     post:
       tags:
       - Flows
-      summary: Update a complete namespace
+      summary: Update a complete namespace from yaml source
       description: |-
         All flow will be created / updated for this namespace.
-        Flow that already created but not in `flows` will be deleted
+        Flow that already created but not in `flows` will be deleted if the query delete is `true`
       operationId: updateNamespace
       parameters:
       - name: namespace
@@ -1283,8 +1286,18 @@ paths:
         required: true
         schema:
           type: string
+      - name: delete
+        in: query
+        description: If missing flow should be deleted
+        required: true
+        schema:
+          type: boolean
+          default: true
       requestBody:
         content:
+          application/x-yaml:
+            schema:
+              type: string
           application/json:
             schema:
               type: array
@@ -1299,7 +1312,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Flow'
+                  $ref: '#/components/schemas/FlowWithSource'
   /api/v1/flows/{namespace}/{id}:
     get:
       tags:
@@ -1319,6 +1332,13 @@ paths:
         required: true
         schema:
           type: string
+      - name: source
+        in: query
+        description: Include the source code
+        required: true
+        schema:
+          type: boolean
+          default: false
       responses:
         "200":
           description: index_2 200 response
@@ -1346,9 +1366,12 @@ paths:
           type: string
       requestBody:
         content:
-          application/json:
+          '*/*':
             schema:
               $ref: '#/components/schemas/Flow'
+          application/x-yaml:
+            schema:
+              type: string
         required: true
       responses:
         "200":
@@ -1472,7 +1495,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Flow'
+                  $ref: '#/components/schemas/FlowWithSource'
   /api/v1/flows/{namespace}/{id}/tasks/{taskId}:
     get:
       tags:
@@ -3981,6 +4004,15 @@ components:
           type: string
         relation:
           $ref: '#/components/schemas/FlowRelation'
+    FlowWithSource:
+      allOf:
+      - $ref: '#/components/schemas/Flow'
+      - required:
+        - source
+        type: object
+        properties:
+          source:
+            type: string
     GraphCluster:
       type: object
       allOf:
