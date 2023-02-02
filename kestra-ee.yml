@@ -1270,6 +1270,27 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/PagedResults_SearchResult_Flow__'
+  /api/v1/flows/validate:
+    post:
+      tags:
+      - Flows
+      summary: Validate a list of flows
+      operationId: validateFlows
+      requestBody:
+        content:
+          application/x-yaml:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: validateFlows 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValidateConstraintViolation'
   /api/v1/flows/{namespace}:
     post:
       tags:
@@ -2932,6 +2953,67 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/PagedResults_Template_'
+  /api/v1/templates/validate:
+    post:
+      tags:
+      - Templates
+      summary: Validate a list of templates
+      operationId: validateTemplates
+      requestBody:
+        content:
+          application/x-yaml:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: validateTemplates 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ValidateConstraintViolation'
+  /api/v1/templates/{namespace}:
+    post:
+      tags:
+      - Templates
+      summary: Update a complete namespace from json object
+      description: |-
+        All Template will be created / updated for this namespace.
+        Template already created but not in `templates` will be deleted if the query delete is `true`
+      operationId: updateNamespace_1
+      parameters:
+      - name: namespace
+        in: path
+        description: The template namespace
+        required: true
+        schema:
+          type: string
+      - name: delete
+        in: query
+        description: If missing template should be deleted
+        required: true
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Template'
+        required: true
+      responses:
+        "200":
+          description: updateNamespace_1 200 response
+          content:
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Template'
   /api/v1/templates/{namespace}/{id}:
     get:
       tags:
@@ -4676,4 +4758,25 @@ components:
         type:
           type: string
         name:
+          type: string
+    ValidateConstraintViolation:
+      required:
+      - constraints
+      - flow
+      - index
+      - namespace
+      type: object
+      properties:
+        identity:
+          type: string
+        flowId:
+          type: string
+        flow:
+          type: string
+        namespace:
+          type: string
+        index:
+          type: integer
+          format: int32
+        constraints:
           type: string
