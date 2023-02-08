@@ -1542,6 +1542,13 @@ paths:
         required: true
         schema:
           type: string
+      - name: revision
+        in: query
+        description: The flow revision
+        required: true
+        schema:
+          type: integer
+          format: int32
       responses:
         "200":
           description: flowTask 200 response
