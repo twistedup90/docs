@@ -2142,13 +2142,20 @@ paths:
           nullable: true
           items:
             type: string
+      - name: existing
+        in: query
+        description: Return only existing namespace
+        schema:
+          type: boolean
+          nullable: true
+          default: false
       responses:
         "200":
           description: find_6 200 response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedResults_Namespace_'
+                $ref: '#/components/schemas/PagedResults_NamespaceController.NamespaceWithDisabled_'
   /api/v1/namespaces/{id}:
     get:
       tags:
@@ -3533,7 +3540,7 @@ components:
           total:
             type: integer
             format: int64
-    ArrayListTotal_Namespace_:
+    ArrayListTotal_NamespaceController.NamespaceWithDisabled_:
       allOf:
       - $ref: '#/components/schemas/ArrayList_Object_'
       - $ref: '#/components/schemas/AbstractList_Object_'
@@ -4284,6 +4291,15 @@ components:
           type: string
         flowId:
           type: string
+    NamespaceController.NamespaceWithDisabled:
+      allOf:
+      - $ref: '#/components/schemas/Namespace'
+      - required:
+        - disabled
+        type: object
+        properties:
+          disabled:
+            type: boolean
     Object:
       type: object
     PagedResults_AuditLogController.AuditLogWithUser_:
@@ -4352,14 +4368,14 @@ components:
         total:
           type: integer
           format: int64
-    PagedResults_Namespace_:
+    PagedResults_NamespaceController.NamespaceWithDisabled_:
       required:
       - results
       - total
       type: object
       properties:
         results:
-          $ref: '#/components/schemas/ArrayListTotal_Namespace_'
+          $ref: '#/components/schemas/ArrayListTotal_NamespaceController.NamespaceWithDisabled_'
         total:
           type: integer
           format: int64
