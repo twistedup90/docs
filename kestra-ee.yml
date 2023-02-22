@@ -380,91 +380,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Object'
-  /api/v1/executions/kill/by-ids:
-    delete:
-      tags:
-      - Executions
-      summary: Kill a list of executions
-      operationId: killByIds
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: string
-        required: true
-      responses:
-        "200":
-          description: killByIds 200 response
-          content:
-            text/json:
-              schema:
-                $ref: '#/components/schemas/Object'
-  /api/v1/executions/kill/query:
-    delete:
-      tags:
-      - Executions
-      summary: Kill executions filter by query parameters
-      operationId: killByQuery
-      parameters:
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
-      - null
-      - null
-      - null
-      - null
-      - name: state
-        in: query
-        description: A state filter
-        schema:
-          type: array
-          nullable: true
-          items:
-            $ref: '#/components/schemas/State.Type'
-      - name: q
-        in: query
-        description: A string filter
-        schema:
-          type: string
-          nullable: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                namespace:
-                  type: string
-                  description: A namespace filter prefix
-                  nullable: true
-                flowId:
-                  type: string
-                  description: A flow id filter
-                  nullable: true
-                startDate:
-                  type: string
-                  description: The start datetime
-                  format: date-time
-                  nullable: true
-                endDate:
-                  type: string
-                  description: The end datetime
-                  format: date-time
-                  nullable: true
-        required: true
-      responses:
-        "200":
-          description: killByQuery 200 response
-          content:
-            text/json:
-              schema:
-                $ref: '#/components/schemas/ExecutionController.BulkResponse'
-  /api/v1/executions/query:
+  /api/v1/executions/by-query:
     delete:
       tags:
       - Executions
@@ -527,6 +443,90 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ExecutionController.BulkResponse'
+  /api/v1/executions/kill/by-ids:
+    delete:
+      tags:
+      - Executions
+      summary: Kill a list of executions
+      operationId: killByIds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: killByIds 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Object'
+  /api/v1/executions/kill/by-query:
+    delete:
+      tags:
+      - Executions
+      summary: Kill executions filter by query parameters
+      operationId: killByQuery
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - null
+      - null
+      - null
+      - null
+      - name: state
+        in: query
+        description: A state filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/State.Type'
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namespace:
+                  type: string
+                  description: A namespace filter prefix
+                  nullable: true
+                flowId:
+                  type: string
+                  description: A flow id filter
+                  nullable: true
+                startDate:
+                  type: string
+                  description: The start datetime
+                  format: date-time
+                  nullable: true
+                endDate:
+                  type: string
+                  description: The end datetime
+                  format: date-time
+                  nullable: true
+        required: true
+      responses:
+        "200":
+          description: killByQuery 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionController.BulkResponse'
   /api/v1/executions/restart/by-ids:
     post:
       tags:
@@ -548,7 +548,7 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Object'
-  /api/v1/executions/restart/query:
+  /api/v1/executions/restart/by-query:
     post:
       tags:
       - Executions
@@ -1150,6 +1150,97 @@ paths:
                 type: array
                 items:
                   type: string
+  /api/v1/flows/export/by-ids:
+    post:
+      tags:
+      - Flows
+      summary: Export flows as a ZIP archive of yaml sources.
+      operationId: exportByIds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdWithNamespace'
+        required: true
+      responses:
+        "200":
+          description: exportByIds 200 response
+          content:
+            application/octet-stream:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /api/v1/flows/export/by-query:
+    get:
+      tags:
+      - Flows
+      summary: Export flows as a ZIP archive of yaml sources.
+      operationId: exportByQuery
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: labels
+        in: query
+        description: A labels filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: exportByQuery 200 response
+          content:
+            application/octet-stream:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /api/v1/flows/import:
+    post:
+      tags:
+      - Flows
+      summary: Import flows as a ZIP archive of yaml sources or a multi-objects YAML
+        file.
+      operationId: importFlows
+      parameters:
+      - null
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileUpload:
+                  type: string
+                  description: "The file to import, can be a ZIP archive or a multi-objects\
+                    \ YAML file"
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: importFlows 200 response
   /api/v1/flows/search:
     get:
       tags:
@@ -2911,6 +3002,83 @@ paths:
                 type: array
                 items:
                   type: string
+  /api/v1/templates/export/by-ids:
+    post:
+      summary: Export templates as a ZIP archive of yaml sources.
+      operationId: exportByIds_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdWithNamespace'
+        required: true
+      responses:
+        "200":
+          description: exportByIds_1 200 response
+          content:
+            application/octet-stream:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /api/v1/templates/export/by-query:
+    get:
+      summary: Export templates as a ZIP archive of yaml sources.
+      operationId: exportByQuery_1
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: exportByQuery_1 200 response
+          content:
+            application/octet-stream:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /api/v1/templates/import:
+    post:
+      summary: Import templates as a ZIP archive of yaml sources or a multi-objects
+        YAML file.
+      operationId: importTemplates
+      parameters:
+      - null
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileUpload:
+                  type: string
+                  description: "The file to import, can be a ZIP archive or a multi-objects\
+                    \ YAML file"
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: importTemplates 200 response
   /api/v1/templates/search:
     get:
       tags:
@@ -3352,23 +3520,13 @@ components:
       properties:
         empty:
           type: boolean
-    AbstractGraphTask:
+    AbstractGraph:
       type: object
       properties:
         uid:
           type: string
         type:
           type: string
-        task:
-          $ref: '#/components/schemas/Task'
-        taskRun:
-          $ref: '#/components/schemas/TaskRun'
-        values:
-          type: array
-          items:
-            type: string
-        relationType:
-          $ref: '#/components/schemas/RelationType'
     AbstractList_Object_:
       type: object
       allOf:
@@ -4016,7 +4174,7 @@ components:
         nodes:
           type: array
           items:
-            $ref: '#/components/schemas/AbstractGraphTask'
+            $ref: '#/components/schemas/AbstractGraph'
         edges:
           type: array
           items:
@@ -4033,7 +4191,7 @@ components:
       type: object
       properties:
         cluster:
-          $ref: '#/components/schemas/GraphCluster'
+          $ref: '#/components/schemas/AbstractGraph'
         nodes:
           type: array
           items:
@@ -4109,10 +4267,6 @@ components:
         properties:
           source:
             type: string
-    GraphCluster:
-      type: object
-      allOf:
-      - $ref: '#/components/schemas/AbstractGraphTask'
     Group:
       required:
       - deleted
@@ -4132,6 +4286,13 @@ components:
           type: string
         deleted:
           type: boolean
+    IdWithNamespace:
+      type: object
+      properties:
+        namespace:
+          type: string
+        id:
+          type: string
     Input:
       required:
       - name
@@ -4521,6 +4682,7 @@ components:
       - flow
       - template
       - task
+      - trigger
     Relation:
       required:
       - relationType
