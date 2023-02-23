@@ -393,10 +393,32 @@ paths:
         schema:
           type: string
           nullable: true
-      - null
-      - null
-      - null
-      - null
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: flowId
+        in: query
+        description: A flow id filter
+        schema:
+          type: string
+          nullable: true
+      - name: startDate
+        in: query
+        description: The start datetime
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: endDate
+        in: query
+        description: The end datetime
+        schema:
+          type: string
+          format: date-time
+          nullable: true
       - name: state
         in: query
         description: A state filter
@@ -411,31 +433,6 @@ paths:
         schema:
           type: string
           nullable: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                namespace:
-                  type: string
-                  description: A namespace filter prefix
-                  nullable: true
-                flowId:
-                  type: string
-                  description: A flow id filter
-                  nullable: true
-                startDate:
-                  type: string
-                  description: The start datetime
-                  format: date-time
-                  nullable: true
-                endDate:
-                  type: string
-                  description: The end datetime
-                  format: date-time
-                  nullable: true
-        required: true
       responses:
         "200":
           description: deleteByQuery 200 response
@@ -477,10 +474,32 @@ paths:
         schema:
           type: string
           nullable: true
-      - null
-      - null
-      - null
-      - null
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: flowId
+        in: query
+        description: A flow id filter
+        schema:
+          type: string
+          nullable: true
+      - name: startDate
+        in: query
+        description: The start datetime
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: endDate
+        in: query
+        description: The end datetime
+        schema:
+          type: string
+          format: date-time
+          nullable: true
       - name: state
         in: query
         description: A state filter
@@ -495,31 +514,6 @@ paths:
         schema:
           type: string
           nullable: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                namespace:
-                  type: string
-                  description: A namespace filter prefix
-                  nullable: true
-                flowId:
-                  type: string
-                  description: A flow id filter
-                  nullable: true
-                startDate:
-                  type: string
-                  description: The start datetime
-                  format: date-time
-                  nullable: true
-                endDate:
-                  type: string
-                  description: The end datetime
-                  format: date-time
-                  nullable: true
-        required: true
       responses:
         "200":
           description: killByQuery 200 response
@@ -561,10 +555,32 @@ paths:
         schema:
           type: string
           nullable: true
-      - null
-      - null
-      - null
-      - null
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: flowId
+        in: query
+        description: A flow id filter
+        schema:
+          type: string
+          nullable: true
+      - name: startDate
+        in: query
+        description: The start datetime
+        schema:
+          type: string
+          format: date-time
+          nullable: true
+      - name: endDate
+        in: query
+        description: The end datetime
+        schema:
+          type: string
+          format: date-time
+          nullable: true
       - name: state
         in: query
         description: A state filter
@@ -579,31 +595,6 @@ paths:
         schema:
           type: string
           nullable: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                namespace:
-                  type: string
-                  description: A namespace filter prefix
-                  nullable: true
-                flowId:
-                  type: string
-                  description: A flow id filter
-                  nullable: true
-                startDate:
-                  type: string
-                  description: The start datetime
-                  format: date-time
-                  nullable: true
-                endDate:
-                  type: string
-                  description: The end datetime
-                  format: date-time
-                  nullable: true
-        required: true
       responses:
         "200":
           description: restartByQuery 200 response
@@ -715,7 +706,6 @@ paths:
         schema:
           type: string
       - null
-      - null
       - name: wait
         in: query
         description: If the server will wait the end of the execution
@@ -729,12 +719,6 @@ paths:
             schema:
               type: object
               properties:
-                inputs:
-                  type: object
-                  additionalProperties:
-                    type: string
-                  description: The inputs
-                  nullable: true
                 files:
                   type: array
                   description: The inputs of type file
@@ -742,6 +726,9 @@ paths:
                   items:
                     type: string
                     format: binary
+              additionalProperties:
+                type: string
+              nullable: true
         required: true
       responses:
         "200":
