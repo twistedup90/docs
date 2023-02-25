@@ -390,49 +390,49 @@ paths:
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: flowId
         in: query
         description: A flow id filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: startDate
         in: query
         description: The start datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: endDate
         in: query
         description: The end datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: state
         in: query
         description: A state filter
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: deleteByQuery 200 response
@@ -471,49 +471,49 @@ paths:
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: flowId
         in: query
         description: A flow id filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: startDate
         in: query
         description: The start datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: endDate
         in: query
         description: The end datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: state
         in: query
         description: A state filter
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: killByQuery 200 response
@@ -552,49 +552,49 @@ paths:
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: flowId
         in: query
         description: A flow id filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: startDate
         in: query
         description: The start datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: endDate
         in: query
         description: The end datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: state
         in: query
         description: A state filter
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: restartByQuery 200 response
@@ -628,57 +628,57 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             type: string
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: flowId
         in: query
         description: A flow id filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: startDate
         in: query
         description: The start datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: endDate
         in: query
         description: The end datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: state
         in: query
         description: A state filter
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: find_2 200 response
@@ -722,13 +722,11 @@ paths:
                 files:
                   type: array
                   description: The inputs of type file
-                  nullable: true
                   items:
                     type: string
                     format: binary
               additionalProperties:
                 type: string
-              nullable: true
         required: true
       responses:
         "200":
@@ -1030,16 +1028,16 @@ paths:
       - name: taskRunId
         in: query
         description: The taskrun id
+        required: true
         schema:
           type: string
-          nullable: true
       - name: revision
         in: query
         description: The flow revision to use for new execution
+        required: true
         schema:
           type: integer
           format: int32
-          nullable: true
       responses:
         "200":
           description: replay 200 response
@@ -1063,10 +1061,10 @@ paths:
       - name: revision
         in: query
         description: The flow revision to use for new execution
+        required: true
         schema:
           type: integer
           format: int32
-          nullable: true
       responses:
         "200":
           description: restart 200 response
@@ -1171,29 +1169,29 @@ paths:
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: labels
         in: query
         description: A labels filter
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             type: string
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: exportByQuery 200 response
@@ -1874,6 +1872,7 @@ paths:
       parameters:
       - name: id
         in: path
+        description: The group id
         required: true
         schema:
           type: string
@@ -1975,9 +1974,9 @@ paths:
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: page
         in: query
         description: The current page
@@ -1997,50 +1996,49 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             type: string
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: flowId
         in: query
         description: A flow id filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: minLevel
         in: query
         description: The min log level filter
+        required: true
         schema:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/Level'
+          $ref: '#/components/schemas/Level'
       - name: startDate
         in: query
         description: The start datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: endDate
         in: query
         description: The end datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: find_5 200 response
@@ -2064,22 +2062,21 @@ paths:
       - name: minLevel
         in: query
         description: The min log level filter
+        required: true
         schema:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/Level'
+          $ref: '#/components/schemas/Level'
       - name: taskRunId
         in: query
         description: The taskrun id
+        required: true
         schema:
           type: string
-          nullable: true
       - name: taskId
         in: query
         description: The task id
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: findByExecution 200 response
@@ -2105,10 +2102,9 @@ paths:
       - name: minLevel
         in: query
         description: The min log level filter
+        required: true
         schema:
-          nullable: true
-          allOf:
-          - $ref: '#/components/schemas/Level'
+          $ref: '#/components/schemas/Level'
       responses:
         "200":
           description: follow_1 200 response
@@ -2897,57 +2893,57 @@ paths:
       - name: sort
         in: query
         description: The sort of current page
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             type: string
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: flowId
         in: query
         description: A flow id filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: startDate
         in: query
         description: The start datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: endDate
         in: query
         description: The end datetime
+        required: true
         schema:
           type: string
           format: date-time
-          nullable: true
       - name: state
         in: query
         description: A state filter
+        required: true
         schema:
           type: array
-          nullable: true
           items:
             $ref: '#/components/schemas/State.Type'
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: findTaskRun 200 response
@@ -3019,21 +3015,21 @@ paths:
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       - name: namespace
         in: query
         description: A namespace filter prefix
+        required: true
         schema:
           type: string
-          nullable: true
       - name: q
         in: query
         description: A string filter
+        required: true
         schema:
           type: string
-          nullable: true
       responses:
         "200":
           description: exportByQuery_1 200 response
