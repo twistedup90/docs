@@ -439,7 +439,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/ExecutionController.BulkResponse'
+                $ref: '#/components/schemas/BulkResponse'
   /api/v1/executions/kill/by-ids:
     delete:
       tags:
@@ -520,7 +520,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/ExecutionController.BulkResponse'
+                $ref: '#/components/schemas/BulkResponse'
   /api/v1/executions/restart/by-ids:
     post:
       tags:
@@ -601,7 +601,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/ExecutionController.BulkResponse'
+                $ref: '#/components/schemas/BulkResponse'
   /api/v1/executions/search:
     get:
       tags:
@@ -1122,6 +1122,128 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/FlowWithSource'
+  /api/v1/flows/delete/by-ids:
+    delete:
+      tags:
+      - Flows
+      summary: Delete flows by their IDs.
+      operationId: deleteByIds_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdWithNamespace'
+        required: true
+      responses:
+        "200":
+          description: deleteByIds_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
+  /api/v1/flows/delete/by-query:
+    delete:
+      tags:
+      - Flows
+      summary: Delete flows returned by the query parameters.
+      operationId: deleteByQuery_1
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: labels
+        in: query
+        description: A labels filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: deleteByQuery_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
+  /api/v1/flows/disable/by-ids:
+    post:
+      tags:
+      - Flows
+      summary: Disable flows by their IDs.
+      operationId: disableByIds
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdWithNamespace'
+        required: true
+      responses:
+        "200":
+          description: disableByIds 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
+  /api/v1/flows/disable/by-query:
+    post:
+      tags:
+      - Flows
+      summary: Disable flows returned by the query parameters.
+      operationId: disableByQuery
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: labels
+        in: query
+        description: A labels filter
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: disableByQuery 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
   /api/v1/flows/distinct-namespaces:
     get:
       tags:
@@ -1642,10 +1764,10 @@ paths:
       - name: revision
         in: query
         description: The flow revision
-        required: true
         schema:
           type: integer
           format: int32
+          nullable: true
       responses:
         "200":
           description: flowTask 200 response
@@ -3009,6 +3131,59 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/Template'
+  /api/v1/templates/delete/by-ids:
+    delete:
+      tags:
+      - Flows
+      summary: Delete flows by their IDs.
+      operationId: deleteByIds_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/IdWithNamespace'
+        required: true
+      responses:
+        "200":
+          description: deleteByIds_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
+  /api/v1/templates/delete/by-query:
+    delete:
+      tags:
+      - Flows
+      summary: Delete flows returned by the query parameters.
+      operationId: deleteByQuery_2
+      parameters:
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      - name: namespace
+        in: query
+        description: A namespace filter prefix
+        schema:
+          type: string
+          nullable: true
+      - name: q
+        in: query
+        description: A string filter
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: deleteByQuery_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkResponse'
   /api/v1/templates/distinct-namespaces:
     get:
       tags:
@@ -3910,6 +4085,12 @@ components:
           $ref: '#/components/schemas/UserController.ApiUser'
         group:
           $ref: '#/components/schemas/Group'
+    BulkResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
     Condition:
       required:
       - type
@@ -4062,12 +4243,6 @@ components:
           $ref: '#/components/schemas/ExecutionTrigger'
         deleted:
           type: boolean
-    ExecutionController.BulkResponse:
-      type: object
-      properties:
-        count:
-          type: integer
-          format: int32
     ExecutionController.EvalResult:
       type: object
       properties:
