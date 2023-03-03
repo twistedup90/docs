@@ -33,6 +33,7 @@ module.exports = {
             hostname: 'https://kestra.io',
             default: ['/404.html']
         },
+        'check-md': {},
     },
     head: [
         ['link', {rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png'}],

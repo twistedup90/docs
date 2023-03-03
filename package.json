@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vuepress dev",
     "build": "vuepress build",
+    "check-md": "vuepress check-md --pattern 'docs/**/*.md' .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -56,7 +57,7 @@
     "@vuepress/plugin-google-analytics": "^1.9.7",
     "@vuepress/plugin-nprogress": "^1.9.7",
     "@vuepress/theme-default": "^1.9.7",
-    "node-sass": "^5.0.0",
+    "node-sass": "^6.0.0",
     "buffer": "^6.0.3",
     "sass-loader": "^10.1.1",
     "timeago.js": "^4.0.2",
@@ -66,6 +67,7 @@
     "vuepress-plugin-fulltext-search": "https://github.com/tchiotludo/vuepress-plugin-fulltext-search.git#feat/topCategoryLevel",
     "vuepress-plugin-medium-zoom": "^1.1.9",
     "vuepress-plugin-seo": "^0.1.4",
-    "vuepress-plugin-smooth-scroll": "^0.0.10"
+    "vuepress-plugin-smooth-scroll": "^0.0.10",
+    "vuepress-plugin-check-md": "^0.0.3"
   }
 }

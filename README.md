@@ -30,5 +30,6 @@ Depending on your Node.js and OS version, you may encounter the following error:
 In this case, you must switch to the OpenSSL legacy provider via `export NODE_OPTIONS=--openssl-legacy-provider`.
 
 
+There is a NPM command that allows launching the [check-md vuepress plugin](https://github.com/ulivz/vuepress-plugin-check-md) to check dead links on Vuepresse markdown files. It can be run with `npm run check-md`.
 ## License
 Apache 2.0 © [Kestra Technologies](https://kestra.io)
