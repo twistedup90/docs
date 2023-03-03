@@ -4209,6 +4209,7 @@ components:
       - id
       - inputs
       - namespace
+      - originalId
       - parentId
       - state
       - taskRunList
@@ -4238,6 +4239,8 @@ components:
         state:
           $ref: '#/components/schemas/State'
         parentId:
+          type: string
+        originalId:
           type: string
         trigger:
           $ref: '#/components/schemas/ExecutionTrigger'
