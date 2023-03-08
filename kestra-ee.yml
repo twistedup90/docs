@@ -713,6 +713,13 @@ paths:
         schema:
           type: boolean
           default: false
+      - name: revision
+        in: query
+        description: The flow revision or latest if null
+        schema:
+          type: integer
+          format: int32
+          nullable: true
       requestBody:
         content:
           multipart/form-data:
