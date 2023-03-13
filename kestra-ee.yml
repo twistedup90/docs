@@ -379,7 +379,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/Object'
+                type: object
   /api/v1/executions/by-query:
     delete:
       tags:
@@ -460,7 +460,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/Object'
+                type: object
   /api/v1/executions/kill/by-query:
     delete:
       tags:
@@ -541,7 +541,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/Object'
+                type: object
   /api/v1/executions/restart/by-query:
     post:
       tags:
@@ -1019,7 +1019,7 @@ paths:
           content:
             text/json:
               schema:
-                $ref: '#/components/schemas/Object'
+                type: object
   /api/v1/executions/{executionId}/replay:
     post:
       tags:
@@ -3743,7 +3743,7 @@ components:
         type:
           type: string
         value:
-          $ref: '#/components/schemas/Object'
+          type: object
         name:
           type: string
         tags:
@@ -4659,17 +4659,6 @@ components:
           type: string
         flowId:
           type: string
-    NamespaceController.NamespaceWithDisabled:
-      allOf:
-      - $ref: '#/components/schemas/Namespace'
-      - required:
-        - disabled
-        type: object
-        properties:
-          disabled:
-            type: boolean
-    Object:
-      type: object
     PagedResults_AuditLogController.AuditLogWithUser_:
       required:
       - results
@@ -4934,18 +4923,6 @@ components:
               $ref: '#/components/schemas/Action'
         deleted:
           type: boolean
-    SearchResult_Flow_:
-      required:
-      - fragments
-      - model
-      type: object
-      properties:
-        model:
-          $ref: '#/components/schemas/Flow'
-        fragments:
-          type: array
-          items:
-            type: string
     State:
       required:
       - current
