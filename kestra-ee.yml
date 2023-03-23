@@ -2278,6 +2278,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CurrentUserController.Me'
+  /api/v1/metrics/{executionId}:
+    get:
+      tags:
+      - Metrics
+      summary: Get metrics for a specific execution
+      operationId: findByExecution_1
+      parameters:
+      - name: page
+        in: query
+        description: The current page
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: size
+        in: query
+        description: The current page size
+        required: true
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: sort
+        in: query
+        description: The sort of current page
+        schema:
+          type: array
+          nullable: true
+          items:
+            type: string
+      - name: executionId
+        in: path
+        description: The execution id
+        required: true
+        schema:
+          type: string
+      - name: taskRunId
+        in: query
+        description: The taskrun id
+        schema:
+          type: string
+          nullable: true
+      - name: taskId
+        in: query
+        description: The task id
+        schema:
+          type: string
+          nullable: true
+      responses:
+        "200":
+          description: findByExecution_1 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PagedResults_MetricEntry_'
   /api/v1/namespaces:
     post:
       tags:
@@ -3735,21 +3791,6 @@ components:
       type: object
       allOf:
       - $ref: '#/components/schemas/AbstractCollection_Object_'
-    AbstractMetricEntry_Object_:
-      required:
-      - name
-      type: object
-      properties:
-        type:
-          type: string
-        value:
-          type: object
-        name:
-          type: string
-        tags:
-          type: object
-          additionalProperties:
-            type: string
     AbstractRetry:
       type: object
       properties:
@@ -3891,6 +3932,18 @@ components:
             type: integer
             format: int64
     ArrayListTotal_LogEntry_:
+      allOf:
+      - $ref: '#/components/schemas/ArrayList_Object_'
+      - $ref: '#/components/schemas/AbstractList_Object_'
+      - $ref: '#/components/schemas/AbstractCollection_Object_'
+      - required:
+        - total
+        type: object
+        properties:
+          total:
+            type: integer
+            format: int64
+    ArrayListTotal_MetricEntry_:
       allOf:
       - $ref: '#/components/schemas/ArrayList_Object_'
       - $ref: '#/components/schemas/AbstractList_Object_'
@@ -4725,6 +4778,17 @@ components:
         total:
           type: integer
           format: int64
+    PagedResults_MetricEntry_:
+      required:
+      - results
+      - total
+      type: object
+      properties:
+        results:
+          $ref: '#/components/schemas/ArrayListTotal_MetricEntry_'
+        total:
+          type: integer
+          format: int64
     PagedResults_NamespaceController.NamespaceWithDisabled_:
       required:
       - results
@@ -5042,14 +5106,9 @@ components:
           $ref: '#/components/schemas/State'
     TaskRunAttempt:
       required:
-      - metrics
       - state
       type: object
       properties:
-        metrics:
-          type: array
-          items:
-            $ref: '#/components/schemas/AbstractMetricEntry_Object_'
         state:
           $ref: '#/components/schemas/State'
     Template:
