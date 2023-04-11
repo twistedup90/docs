@@ -1517,6 +1517,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ValidateConstraintViolation'
+  /api/v1/flows/validate/task:
+    post:
+      tags:
+      - Flows
+      summary: Validate a list of flows
+      operationId: validateTask
+      requestBody:
+        content:
+          application/x-yaml:
+            schema:
+              type: string
+        required: true
+      responses:
+        "200":
+          description: validateTask 200 response
+          content:
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ValidateConstraintViolation'
   /api/v1/flows/{namespace}:
     post:
       tags:
@@ -4428,6 +4447,7 @@ components:
       required:
       - clusters
       - edges
+      - flowables
       - nodes
       type: object
       properties:
@@ -4443,11 +4463,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FlowGraph.Cluster'
+        flowables:
+          type: array
+          items:
+            type: string
     FlowGraph.Cluster:
       required:
       - cluster
+      - end
       - nodes
       - parents
+      - start
       type: object
       properties:
         cluster:
@@ -4460,6 +4486,10 @@ components:
           type: array
           items:
             type: string
+        start:
+          type: string
+        end:
+          type: string
     FlowGraph.Edge:
       required:
       - relation
