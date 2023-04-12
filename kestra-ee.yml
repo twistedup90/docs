@@ -1523,6 +1523,14 @@ paths:
       - Flows
       summary: Validate a list of flows
       operationId: validateTask
+      parameters:
+      - name: section
+        in: query
+        description: Type of task
+        required: true
+        schema:
+          type: string
+          default: task
       requestBody:
         content:
           application/x-yaml:
