@@ -14,7 +14,7 @@ image: /blogs/2023-04-13-welcome-kestra-0-8-0.png
 
 Kestra is back with version 0.8.0, and this time, we're putting the spotlight on enhancing the flow creation experience. We've introduced powerful new features and developer tools that make Kestra the go-to data orchestration platform for data engineers like you.
 
-## Improved developer experience 
+## Improved developer experience
 
 ### First iteration of the low-code editor
 
@@ -38,7 +38,7 @@ To limit context switching, we added a contextual panel in the flow editor displ
 
 Tasks can emit metrics, those metrics are accessible as Micrometer metrics along with Kestra’s internal metrics and system metrics, and are also accessible from the UI … if you found them! It took me six weeks to figure out that task metrics can be accessible from the task attempt menu …
 
-We now moved the storage of task metrics in a dedicated place out of the task attempt and added a new **Metrics** tab on the **Execution* page to access all the metrics of a flow execution. 
+We now moved the storage of task metrics in a dedicated place out of the task attempt and added a new **Metrics** tab on the **Execution** page to access all the metrics of a flow execution.
 
 ![Task metrics](./2023-04-13-welcome-kestra-0-8-0/flow-metrics.png)
 
@@ -74,7 +74,7 @@ And we also improved the quality of the [plugin documentation](https://kestra.io
 
 ## Plugins
 
-Kestra 0.8.0 introduces new plugins like the  [Google Cloud Dataproc serverless](https://kestra.io/plugins/plugin-gcp/#dataproc) plugin to launch Dataproc batches (Spark) from Kestra, the [Microsoft Teams notification] (https://kestra.io/plugins/plugin-notifications/#teams) plugin to send notification messages to Microsoft Teams and the [SSH Command](https://kestra.io/plugins/plugin-fs/tasks/ssh/io.kestra.plugin.fs.ssh.Command.html) task so send shell commands to a remote server with the SSH protocol.
+Kestra 0.8.0 introduces new plugins like the  [Google Cloud Dataproc serverless](https://kestra.io/plugins/plugin-gcp/#dataproc) plugin to launch Dataproc batches (Spark) from Kestra, the [Microsoft Teams notification](https://kestra.io/plugins/plugin-notifications/#teams) plugin to send notification messages to Microsoft Teams and the [SSH Command](https://kestra.io/plugins/plugin-fs/tasks/ssh/io.kestra.plugin.fs.ssh.Command.html) task so send shell commands to a remote server with the SSH protocol.
 
 ## Enterprise Edition
 
