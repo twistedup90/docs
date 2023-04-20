@@ -9,7 +9,8 @@
                 aria-expanded="false"
                 aria-controls="tocContents"
             >
-                <Menu /> Documentation Menu
+                <Menu/>
+                Documentation Menu
             </button>
             <div class="collapse bd-menu-collapse" id="docs-menu">
                 <nav class="bd-links w-100" id="bd-docs-nav" aria-label="Docs navigation">
@@ -30,12 +31,12 @@
 </template>
 
 <script>
-    import ChevronDown from "vue-material-design-icons/ChevronDown.vue"
-    import ChevronUp from "vue-material-design-icons/ChevronUp.vue"
-    import Menu from "vue-material-design-icons/Menu.vue"
-    import RecursiveNavSidebar from "./RecursiveNavSidebar.vue";
-    import {fetchContentNavigation, useAsyncData} from "#imports";
-    import {hash} from "ohash";
+import ChevronDown from "vue-material-design-icons/ChevronDown.vue"
+import ChevronUp from "vue-material-design-icons/ChevronUp.vue"
+import Menu from "vue-material-design-icons/Menu.vue"
+import RecursiveNavSidebar from "./RecursiveNavSidebar.vue";
+import {fetchContentNavigation, useAsyncData} from "#imports";
+import {hash} from "ohash";
 
     export default defineComponent({
         components: {
@@ -55,12 +56,23 @@
             },
         },
         async setup(props) {
-            const queryBuilder = queryContent('/' + props.type + '/');
+            const key = `NavSideBar-${hash(props.type)}`;
+            let navigation;
 
-            const {data: navigation} = await useAsyncData(
-                `NavSideBar-${hash(props.type)}`,
-                () => fetchContentNavigation(queryBuilder)
-            );
+            if(process.client){
+                navigation = JSON.parse(window.sessionStorage.getItem(key));
+            }
+
+            if(!navigation) {
+                navigation = (await useAsyncData(
+                    key,
+                    () => fetchContentNavigation(queryContent('/' + props.type + '/'))
+                )).data;
+
+                if(process.client) {
+                    window.sessionStorage.setItem(key, JSON.stringify(navigation.value));
+                }
+            }
 
             return {navigation};
         },
@@ -73,41 +85,41 @@
 </script>
 
 <style lang="scss" scoped>
-    @import "../../assets/styles/_variable.scss";
+@import "../../assets/styles/_variable.scss";
 
-    .bd-sidebar {
+.bd-sidebar {
+    @include media-breakpoint-up(lg) {
+        position: sticky;
+        top: 5rem;
+        display: block !important;
+        height: subtract(100vh, 6rem);
+        padding-left: .25rem;
+        margin-left: -.25rem;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: calc($spacer / 4);
+    }
+
+
+    button.btn {
+        border: 1px solid var(--bs-gray-300);
+        font-weight: bold;
+        width: 100%;
+    }
+
+    .bd-menu-collapse {
+        @include media-breakpoint-down(lg) {
+            nav {
+                padding: calc($spacer / 2) $spacer;
+                border: 1px solid var(--bs-border-color);
+                box-shadow: $box-shadow-sm;
+                @include border-radius(var(--bs-border-radius));
+            }
+        }
+
         @include media-breakpoint-up(lg) {
-            position: sticky;
-            top: 5rem;
-            display: block !important;
-            height: subtract(100vh, 6rem);
-            padding-left: .25rem;
-            margin-left: -.25rem;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding-right: calc($spacer / 4);
-        }
-
-
-        button.btn {
-            border: 1px solid var(--bs-gray-300);
-            font-weight: bold;
-            width: 100%;
-        }
-
-        .bd-menu-collapse {
-            @include media-breakpoint-down(lg) {
-                nav {
-                    padding: calc($spacer / 2) $spacer;
-                    border: 1px solid var(--bs-border-color);
-                    box-shadow: $box-shadow-sm;
-                    @include border-radius(var(--bs-border-radius));
-                }
-            }
-
-            @include media-breakpoint-up(lg) {
-                display: block !important; // stylelint-disable-line declaration-no-important
-            }
+            display: block !important; // stylelint-disable-line declaration-no-important
         }
     }
+}
 </style>

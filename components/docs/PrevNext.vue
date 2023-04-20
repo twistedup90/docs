@@ -38,6 +38,7 @@
     import ArrowLeft from "vue-material-design-icons/ArrowLeft.vue"
     import ArrowRight from "vue-material-design-icons/ArrowRight.vue"
     import {prevNext} from "~/utils/navigation.js";
+    import {useAsyncData, fetchContentNavigation} from "#imports";
     const {navDirFromPath} = useContentHelpers()
 
     export default defineComponent({
@@ -45,12 +46,23 @@
         async setup() {
             const route = useRoute();
             let basePath = route.path.substring(0, route.path.substring(1).indexOf("/") + 2);
-            const queryBuilder = queryContent(basePath);
 
-            const {data: navigation} = await useAsyncData(
-                `PrevNext-${hash(basePath)}`,
-                () => fetchContentNavigation(queryBuilder)
-            );
+            const key = `PrevNext-${hash(basePath)}`;
+            let navigation;
+            if(process.client){
+                navigation = JSON.parse(window.sessionStorage.getItem(key));
+            }
+
+            if(!navigation) {
+                navigation = (await useAsyncData(
+                    key,
+                    () => fetchContentNavigation(queryContent(basePath))
+                )).data;
+
+                if(process.client) {
+                    window.sessionStorage.setItem(key, JSON.stringify(navigation.value));
+                }
+            }
 
             const {prev, next} = prevNext(navigation, route.path);
 

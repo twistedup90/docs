@@ -1,6 +1,6 @@
 <script>
     import {hash} from "ohash";
-    import {useAsyncData, fetchContentNavigation, useContent} from "#imports";
+    import {useAsyncData, fetchContentNavigation} from "#imports";
     import {NuxtLink} from "#components";
 
     export default defineComponent({
@@ -32,15 +32,25 @@
                 currentPage = route.path;
             }
 
-            const queryBuilder = queryContent(currentPage);
+            const key = `ChildTableOfContents-${hash(currentPage)}`;
+            let navigation;
+            if(process.client){
+                navigation = JSON.parse(window.sessionStorage.getItem(key));
+            }
 
-            const {data: navigation} = await useAsyncData(
-                `ChildTableOfContents-${hash(currentPage)}`,
-                () => fetchContentNavigation(queryBuilder)
-            );
+            if(!navigation) {
+                navigation = (await useAsyncData(
+                    key,
+                    () => fetchContentNavigation(queryContent(currentPage))
+                )).data;
+
+                if(process.client) {
+                    window.sessionStorage.setItem(key, JSON.stringify(navigation.value));
+                }
+            }
 
             const routePath = route.path.endsWith("/") ? route.path.slice(0, -1) : route.path;
-            const dir = (navDirFromPath(routePath, navigation.value) || [])
+            const dir = (navDirFromPath(routePath, navigation.value ?? navigation) || [])
                 .filter(value => value._path !== currentPage)
 
             return {dir, max, header};

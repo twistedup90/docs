@@ -28,7 +28,7 @@ export function prevNext(navigation, path) {
         }
     };
 
-    recursiveFetch(navigation.value[0]);
+    recursiveFetch(navigation.value ? navigation.value[0] : navigation[0]);
 
     return {prev, next};
 }
