@@ -37,7 +37,7 @@
     "posthog-js": "^1.102.0",
     "rapidoc": "^9.3.4",
     "slugify": "^1.6.6",
-    "vanilla-cookieconsent": "^2.9.2",
+    "vanilla-cookieconsent": "^3.0.0",
     "vue": "^3.4.15",
     "vue-material-design-icons": "^5.2.0",
     "vue3-count-to": "^1.1.2",
